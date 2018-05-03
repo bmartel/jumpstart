@@ -79,6 +79,10 @@ def setup_rspec
   generate "rpsec:install"
 end
 
+def setup_kaminari
+  generate "kaminari:config"
+end
+
 def add_users
   # Install Devise
   generate "devise:install"
@@ -252,8 +256,9 @@ add_gems
 after_bundle do
   set_application_name
   stop_spring
-  setup_pg
   setup_rspec
+  setup_pg
+  setup_kaminari
   add_users
   add_sidekiq
   add_foreman
