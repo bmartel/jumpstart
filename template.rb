@@ -255,7 +255,6 @@ after_bundle do
   setup_pg
   setup_rspec
   add_users
-  add_bootstrap
   add_sidekiq
   add_foreman
   add_webpack
