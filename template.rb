@@ -76,7 +76,7 @@ def setup_pg
 end
 
 def setup_rspec
-  generate "rpsec:install"
+  generate "rspec:install"
 end
 
 def setup_kaminari
