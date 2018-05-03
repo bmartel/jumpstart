@@ -5,6 +5,10 @@ module Users
 
     attr_reader :service, :user
 
+    def google
+      handle_auth "Google"
+    end
+
     def facebook
       handle_auth "Facebook"
     end
@@ -69,11 +73,13 @@ module Users
     end
 
     def create_user
-      User.create(
+      user = User.create(
         email: auth.info.email,
         #name: auth.info.name,
         password: Devise.friendly_token[0,20]
       )
+      user.confirm
+      user
     end
 
   end

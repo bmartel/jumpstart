@@ -13,7 +13,7 @@ def add_template_repository_to_source_path
     at_exit { FileUtils.remove_entry(tempdir) }
     git clone: [
       "--quiet",
-      "https://github.com/excid3/jumpstart.git",
+      "https://github.com/bmartel/jumpstart.git",
       tempdir
     ].map(&:shellescape).join(" ")
 
@@ -26,25 +26,30 @@ def add_template_repository_to_source_path
 end
 
 def add_gems
+  gem 'pundit'
+  gem 'enumerize'
+  gem 'kaminari'
+  gem 'pg_search'
   gem 'administrate', '~> 0.10.0'
-  gem 'data-confirm-modal', '~> 1.6.2'
   gem 'devise', '~> 4.4.3'
-  gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
   gem 'devise_masquerade', '~> 0.6.0'
-  gem 'font-awesome-sass', '~> 4.7'
   gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
-  gem 'jquery-rails', '~> 4.3.1'
-  gem 'bootstrap', '~> 4.0.0.beta'
   gem 'mini_magick', '~> 4.8'
   gem 'webpacker', '~> 3.4'
   gem 'sidekiq', '~> 5.0'
   gem 'foreman', '~> 0.84.0'
+  gem 'omniauth-google-oauth2', '~> 0.5.3'
   gem 'omniauth-facebook', '~> 4.0'
   gem 'omniauth-twitter', '~> 1.4'
   gem 'omniauth-github', '~> 1.3'
   gem 'whenever', require: false
   gem 'friendly_id', '~> 5.1.0'
   gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
+  gem_group :development, :test do
+    gem 'rspec-rails'
+    gem 'factory_bot_rails'
+    gem 'faker'
+  end
 end
 
 def set_application_name
@@ -55,9 +60,31 @@ def set_application_name
   puts "You can change application name inside: ./config/application.rb"
 end
 
+def setup_pg
+  generate "migration enable_extensions"
+  generate "pg_search:migration:multisearch"
+
+  insert_into_file Dir["db/migrate/**/*enable_extensions.rb"].first, before: /^  end/ do
+    <<-'RUBY'
+      enable_extension 'pg_trgm'
+      enable_extension 'fuzzystrmatch'
+      enable_extension 'unaccent'
+      enable_extension 'uuid-ossp'
+      enable_extension 'pgcrypto'
+    RUBY
+  end
+end
+
+def setup_rspec
+  generate "rpsec:install"
+end
+
 def add_users
   # Install Devise
   generate "devise:install"
+
+  # Install Pundit policies
+  generate "pundit:install"
 
   # Configure Devise
   environment "config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }",
@@ -65,7 +92,7 @@ def add_users
   route "root to: 'home#index'"
 
   # Devise notices are installed via Bootstrap
-  generate "devise:views:bootstrapped"
+  # generate "devise:views:bootstrapped"
 
   # Create Devise User
   generate :devise, "User",
@@ -92,18 +119,6 @@ def add_users
   inject_into_file("app/models/user.rb", "omniauthable, :masqueradable, :", after: "devise :")
 end
 
-def add_bootstrap
-  # Remove Application CSS
-  run "rm app/assets/stylesheets/application.css"
-
-  # Add Bootstrap JS
-  insert_into_file(
-    "app/assets/javascripts/application.js",
-    "\n//= require jquery\n//= require popper\n//= require bootstrap\n//= require data-confirm-modal",
-    after: "//= require rails-ujs"
-  )
-end
-
 def copy_templates
   directory "app", force: true
   directory "config", force: true
@@ -115,6 +130,21 @@ end
 
 def add_webpack
   rails_command 'webpacker:install'
+end
+
+def add_vuejs
+  rails_command 'webpacker:install:vue'
+end
+
+def add_npm_packages
+  run 'yarn add tailwindcss'
+  run 'yarn add vuex'
+  run 'yarn add vue-router'
+  run 'yarn add vue-meta'
+end
+
+def add_tailwind
+  run './node_modules/.bin/tailwind init'
 end
 
 def add_sidekiq
@@ -171,6 +201,10 @@ def add_multiple_authentication
     generate "model Service user:references provider uid access_token access_token_secret refresh_token expires_at:datetime auth:text"
 
     template = """
+  if Rails.application.secrets.google_app_id.present? && Rails.application.secrets.google_app_secret.present?
+    config.omniauth :google, Rails.application.secrets.google_app_id, Rails.application.secrets.google_app_secret
+  end
+
   if Rails.application.secrets.facebook_app_id.present? && Rails.application.secrets.facebook_app_secret.present?
     config.omniauth :facebook, Rails.application.secrets.facebook_app_id, Rails.application.secrets.facebook_app_secret, scope: 'email,user_posts'
   end
@@ -218,16 +252,21 @@ add_gems
 after_bundle do
   set_application_name
   stop_spring
+  setup_pg
+  setup_rspec
   add_users
   add_bootstrap
   add_sidekiq
   add_foreman
   add_webpack
+  add_vuejs
+  add_npm_packages
+  add_tailwind
   add_announcements
   add_notifications
   add_multiple_authentication
   add_friendly_id
-  
+
   copy_templates
 
   # Migrate
