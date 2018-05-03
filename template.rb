@@ -141,10 +141,7 @@ def add_vuejs
 end
 
 def add_npm_packages
-  run 'yarn add tailwindcss'
-  run 'yarn add vuex'
-  run 'yarn add vue-router'
-  run 'yarn add vue-meta'
+  run 'yarn add tailwindcss vuex vue-router vue-meta'
 end
 
 def add_tailwind
