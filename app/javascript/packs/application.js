@@ -9,7 +9,6 @@ Vue.use(TurbolinksAdapter);
 document.addEventListener('turbolinks:load', () => {
   var vueapp = new Vue({
     el: "#app",
-    template: '<App/>',
     components: { App },
   });
 });

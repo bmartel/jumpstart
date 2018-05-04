@@ -62,7 +62,6 @@ end
 
 def setup_pg
   generate "migration enable_extensions"
-  generate "pg_search:migration:multisearch"
 
   insert_into_file Dir["db/migrate/**/*enable_extensions.rb"].first, before: /^  end/ do
     <<-'RUBY'
@@ -73,6 +72,8 @@ def setup_pg
       enable_extension 'pgcrypto'
     RUBY
   end
+
+  generate "pg_search:migration:multisearch"
 end
 
 def setup_rspec
