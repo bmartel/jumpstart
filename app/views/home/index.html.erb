@@ -1,5 +1,6 @@
 <% content_for :js do %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 <% end %>
 
-<App />
+<div id="app"></div>
