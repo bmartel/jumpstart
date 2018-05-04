@@ -72,7 +72,9 @@ def setup_pg
       enable_extension 'pgcrypto'
     RUBY
   end
+end
 
+def setup_pgsearch
   generate "pg_search:migration:multisearch"
 end
 
@@ -259,6 +261,7 @@ after_bundle do
   stop_spring
   setup_rspec
   setup_pg
+  setup_pgsearch
   setup_kaminari
   add_users
   add_sidekiq
