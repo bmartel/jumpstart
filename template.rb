@@ -141,11 +141,14 @@ def add_vuejs
 end
 
 def add_npm_packages
-  run 'yarn add tailwindcss vuex vue-router vue-meta'
+  run 'yarn add tailwindcss vuex vue-router vue-meta vue-turbolinks'
 end
 
 def add_tailwind
-  run './node_modules/.bin/tailwind init'
+  run './node_modules/.bin/tailwind init app/javascript/styles/tailwind.js'
+  insert_into_file ".postcssrc.yml",
+    "  tailwindcss: './app/javascript/styles/tailwind.js'",
+    after: "postcss-cssnext: {}\n"
 end
 
 def add_sidekiq
