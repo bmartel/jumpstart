@@ -65,6 +65,7 @@ def setup_pg
 
   insert_into_file Dir["db/migrate/**/*create_pg_search_documents.rb"].first, after: "  def self.up\n" do
     <<-'RUBY'
+
     enable_extension 'pg_trgm'
     enable_extension 'fuzzystrmatch'
     enable_extension 'unaccent'
