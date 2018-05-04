@@ -61,21 +61,17 @@ def set_application_name
 end
 
 def setup_pg
-  generate "migration enable_extensions"
+  generate "pg_search:migration:multisearch"
 
-  insert_into_file Dir["db/migrate/**/*enable_extensions.rb"].first, before: /^  end/ do
+  insert_into_file Dir["db/migrate/**/*create_pg_search_documents.rb"].first, after: /^  def self.up/ do
     <<-'RUBY'
-      enable_extension 'pg_trgm'
-      enable_extension 'fuzzystrmatch'
-      enable_extension 'unaccent'
-      enable_extension 'uuid-ossp'
-      enable_extension 'pgcrypto'
+    enable_extension 'pg_trgm'
+    enable_extension 'fuzzystrmatch'
+    enable_extension 'unaccent'
+    enable_extension 'uuid-ossp'
+    enable_extension 'pgcrypto'
     RUBY
   end
-end
-
-def setup_pgsearch
-  generate "pg_search:migration:multisearch"
 end
 
 def setup_rspec
@@ -261,7 +257,6 @@ after_bundle do
   stop_spring
   setup_rspec
   setup_pg
-  setup_pgsearch
   setup_kaminari
   add_users
   add_sidekiq
