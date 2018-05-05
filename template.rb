@@ -186,7 +186,7 @@ def add_users
   end
   """.strip
 
-  inject_into_file("app/models/user.rb", avatar + "\n\n", before: "\nend")
+  inject_into_file("app/models/user.rb", "\n\n" + avatar + "\n\n", before: "\nend")
 
   # Remove trackable
   gsub_file "app/models/user.rb", /:trackable, /, ""
