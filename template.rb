@@ -105,58 +105,52 @@ def add_users
   generate :devise, "User"
   generate :devise_invitable, "User"
 
-  # Set admin default to false
-  in_root do
-    migration = Dir.glob("db/migrate/*devise_create_users.rb").first
-    create_user_migration = """
-    def change
-      create_table :users do |t|
-        ## Database authenticatable
-        t.string :email,              null: false, default: ""
-        t.string :name,               null: false, default: ""
-        t.string :encrypted_password, null: false, default: ""
+  generate "migration devise_changes_to_users"
 
-        ## Invitable
-        t.string   :invitation_token
-        t.datetime :invitation_created_at
-        t.datetime :invitation_sent_at
-        t.datetime :invitation_accepted_at
-        t.integer  :invitation_limit
-        t.integer  :invited_by_id
-        t.string   :invited_by_type
+  # Add additional user migrations
+  devise_changes = Dir["db/migrate/**/*devise_changes_to_users.rb"].first
+  insert_into_file devise_changes, after: "  def up\n" do
+    <<-'RUBY'
+    change_table :users do |t|
+      t.string :name,               null: false, default: ""
+      ## Confirmable
+      t.string   :confirmation_token
+      t.datetime :confirmed_at
+      t.datetime :confirmation_sent_at
+      t.string   :unconfirmed_email # Only if using reconfirmable
 
-        ## Recoverable
-        t.string   :reset_password_token
-        t.datetime :reset_password_sent_at
+      ## Lockable
+      t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
+      t.string   :unlock_token # Only if unlock strategy is :email or :both
+      t.datetime :locked_at
 
-        ## Rememberable
-        t.datetime :remember_created_at
+      ## Announcements
+      t.datetime :announcements_last_read_at
 
-        ## Confirmable
-        t.string   :confirmation_token
-        t.datetime :confirmed_at
-        t.datetime :confirmation_sent_at
-        t.string   :unconfirmed_email # Only if using reconfirmable
+      ## Admin
+      t.boolean :admin, default: false
 
-        ## Lockable
-        t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
-        t.string   :unlock_token # Only if unlock strategy is :email or :both
-        t.datetime :locked_at
+      ## Remove Trackable
+      t.remove :sign_in_count, :current_sign_in_at, :last_sign_in_at, current_sign_in_ip, :last_sign_in_ip
 
-        t.datetime :announcements_last_read_at
-        t.boolean :admin, default: false
-
-        t.timestamps null: false
-      end
-
-      add_index :users, :email,                unique: true
-      add_index :users, :reset_password_token, unique: true
-      add_index :users, :confirmation_token,   unique: true
-      add_index :users, :unlock_token,         unique: true
-      add_index :users, :invitation_token,     unique: true
+      t.index :users, :confirmation_token,   unique: true
+      t.index :users, :unlock_token,         unique: true
     end
-    """.strip
-    gsub_file migration, /  def change.+end/, create_user_migration + "\n\n"
+    RUBY
+  end
+  insert_into_file devise_changes, after: "  def down\n" do
+    <<-'RUBY'
+    change_table :users do |t|
+      t.integer  :sign_in_count, default: 0, null: false
+      t.datetime :current_sign_in_at
+      t.datetime :last_sign_in_at
+      t.inet     :current_sign_in_ip
+      t.inet     :last_sign_in_ip
+
+      t.remove :name, :admin, :announcements_last_read_at, :locked_at, :unlock_token, :failed_attempts, :unconfirmed_email,
+        :confirmation_token, :confirmed_at, :confirmation_sent_at, :unconfirmed_email
+    end
+    RUBY
   end
 
   requirement = Gem::Requirement.new("> 5.2")
@@ -172,23 +166,21 @@ def add_users
   inject_into_file("app/models/user.rb", "lockable, :confirmable, :invitable, :omniauthable, :masqueradable, :", after: "devise :")
 
   # Add avatar handling
-  avatar = """
+  inject_into_file "app/models/user.rb", before: "end" do
+    <<-'RUBY'
+    has_one_attached :image
 
-  has_one_attached :image
+    include Gravtastic
 
-  include Gravtastic
+    GRAVATAR_OPTIONS = { default: 'identicon', size: 256, rating: 'PG' }
 
-  GRAVATAR_OPTIONS = { default: 'identicon', size: 256, rating: 'PG' }
+    gravtastic :email
 
-  gravtastic :email
-
-  def avatar
-    self.image || gravatar_url(GRAVATAR_OPTIONS)
+    def avatar
+      self.image || gravatar_url(GRAVATAR_OPTIONS)
+    end
+    RUBY
   end
-
-  """
-
-  inject_into_file("app/models/user.rb", avatar, before: "end")
 
   # Remove trackable
   gsub_file "app/models/user.rb", /:trackable, /, ""
