@@ -99,7 +99,6 @@ def add_users
   # Configure Devise
   environment "config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }",
               env: 'development'
-  route "root to: 'home#index'"
 
   # Create Devise User
   generate :devise, "User"
@@ -152,19 +151,10 @@ def add_users
   end
 end
 
-def add_routes
-  insert_into_file "config/routes.rb",
-  ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
-  after: "  devise_for :users"
-end
-
 def copy_templates
   directory "app", force: true
   directory "config", force: true
   directory "lib", force: true
-
-  route "get '/terms', to: 'home#terms'"
-  route "get '/privacy', to: 'home#privacy'"
 end
 
 def add_webpack
@@ -188,14 +178,6 @@ end
 
 def add_sidekiq
   environment "config.active_job.queue_adapter = :sidekiq"
-
-  insert_into_file "config/routes.rb",
-    "require 'sidekiq/web'\n\n",
-    before: "Rails.application.routes.draw do"
-
-  insert_into_file "config/routes.rb",
-    "  authenticate :user, lambda { |u| u.admin? } do\n    mount Sidekiq::Web => '/sidekiq'\n  end\n\n",
-    after: "Rails.application.routes.draw do\n"
 end
 
 def add_foreman
@@ -204,12 +186,10 @@ end
 
 def add_announcements
   generate "model Announcement published_at:datetime announcement_type name description:text"
-  route "resources :announcements, only: [:index]"
 end
 
 def add_notifications
   generate "model Notification recipient_id:integer actor_id:integer read_at:datetime action:string notifiable_id:integer notifiable_type:string"
-  route "resources :notifications, only: [:index]"
 end
 
 def add_administrate
@@ -304,7 +284,6 @@ after_bundle do
   add_friendly_id
 
   copy_templates
-  add_routes
 
   # Migrate
   rails_command "db:create"
