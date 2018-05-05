@@ -109,7 +109,7 @@ def add_users
 
   # Add additional user migrations
   devise_changes = Dir["db/migrate/**/*devise_changes_to_users.rb"].first
-  insert_into_file devise_changes, after: "  def up\n" do
+  insert_into_file devise_changes, after: "  def change\n" do
     <<-'RUBY'
     change_table :users do |t|
       t.string :name,               null: false, default: ""
@@ -138,20 +138,6 @@ def add_users
     end
     RUBY
   end
-  insert_into_file devise_changes, after: "  def down\n" do
-    <<-'RUBY'
-    change_table :users do |t|
-      t.integer  :sign_in_count, default: 0, null: false
-      t.datetime :current_sign_in_at
-      t.datetime :last_sign_in_at
-      t.inet     :current_sign_in_ip
-      t.inet     :last_sign_in_ip
-
-      t.remove :name, :admin, :announcements_last_read_at, :locked_at, :unlock_token, :failed_attempts, :unconfirmed_email,
-        :confirmation_token, :confirmed_at, :confirmation_sent_at, :unconfirmed_email
-    end
-    RUBY
-  end
 
   requirement = Gem::Requirement.new("> 5.2")
   rails_version = Gem::Version.new(Rails::VERSION::STRING)
@@ -161,29 +147,6 @@ def add_users
       /  # config.secret_key = .+/,
       "  config.secret_key = Rails.application.credentials.secret_key_base"
   end
-
-  # Add Devise masqueradable to users
-  inject_into_file("app/models/user.rb", "lockable, :confirmable, :invitable, :omniauthable, :masqueradable, :", after: "devise :")
-
-  # Add avatar handling
-  inject_into_file "app/models/user.rb", before: "end" do
-    <<-'RUBY'
-    has_one_attached :image
-
-    include Gravtastic
-
-    GRAVATAR_OPTIONS = { default: 'identicon', size: 256, rating: 'PG' }
-
-    gravtastic :email
-
-    def avatar
-      self.image || gravatar_url(GRAVATAR_OPTIONS)
-    end
-    RUBY
-  end
-
-  # Remove trackable
-  gsub_file "app/models/user.rb", /:trackable, /, ""
 end
 
 def copy_templates
