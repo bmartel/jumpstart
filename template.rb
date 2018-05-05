@@ -131,7 +131,7 @@ def add_users
       t.boolean :admin, default: false
 
       ## Remove Trackable
-      t.remove :sign_in_count, :current_sign_in_at, :last_sign_in_at, current_sign_in_ip, :last_sign_in_ip
+      t.remove :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip
 
       t.index :users, :confirmation_token,   unique: true
       t.index :users, :unlock_token,         unique: true
