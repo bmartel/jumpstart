@@ -95,19 +95,51 @@ def add_users
               env: 'development'
   route "root to: 'home#index'"
 
-  # Devise notices are installed via Bootstrap
-  # generate "devise:views:bootstrapped"
-
   # Create Devise User
-  generate :devise, "User",
-           "name",
-           "announcements_last_read_at:datetime",
-           "admin:boolean"
+  generate :devise, "User"
 
   # Set admin default to false
   in_root do
     migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
-    gsub_file migration, /:admin/, ":admin, default: false"
+    create_user_migration = """
+    def change
+      create_table :users do |t|
+        ## Database authenticatable
+        t.string :email,              null: false, default: ""
+        t.string :name,               null: false, default: ""
+        t.string :encrypted_password, null: false, default: ""
+
+        ## Recoverable
+        t.string   :reset_password_token
+        t.datetime :reset_password_sent_at
+
+        ## Rememberable
+        t.datetime :remember_created_at
+
+        ## Confirmable
+        t.string   :confirmation_token
+        t.datetime :confirmed_at
+        t.datetime :confirmation_sent_at
+        t.string   :unconfirmed_email # Only if using reconfirmable
+
+        ## Lockable
+        t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
+        t.string   :unlock_token # Only if unlock strategy is :email or :both
+        t.datetime :locked_at
+
+        t.datetime :announcements_last_read_at
+        t.boolean :admin, default: false
+
+        t.timestamps null: false
+      end
+
+      add_index :users, :email,                unique: true
+      add_index :users, :reset_password_token, unique: true
+      add_index :users, :confirmation_token,   unique: true
+      add_index :users, :unlock_token,         unique: true
+    end
+    """.strip
+    gsub_file migration, /^  def change.+end$/, create_user_migration + "\n\n"
   end
 
   requirement = Gem::Requirement.new("> 5.2")
@@ -120,7 +152,9 @@ def add_users
   end
 
   # Add Devise masqueradable to users
-  inject_into_file("app/models/user.rb", "omniauthable, :masqueradable, :", after: "devise :")
+  inject_into_file("app/models/user.rb", "lockable, :confirmable, :omniauthable, :masqueradable, :", after: "devise :")
+  # Remove trackable
+  gsub_file "app/models/user.rb", /:trackable, /, ""
 end
 
 def copy_templates
