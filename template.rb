@@ -34,7 +34,7 @@ def add_gems
   gem 'devise', '~> 4.4.3'
   gem 'devise_invitable', '~> 1.7.0'
   gem 'devise_masquerade', '~> 0.6.0'
-  gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
+  gem 'gravtastic'
   gem 'mini_magick', '~> 4.8'
   gem 'webpacker', '~> 3.4'
   gem 'sidekiq', '~> 5.0'
@@ -84,6 +84,10 @@ def setup_kaminari
   generate "kaminari:config"
 end
 
+def add_storage
+  generate "active_storage:install:migrations"
+end
+
 def add_users
   # Install Devise
   generate "devise:install"
@@ -103,7 +107,7 @@ def add_users
 
   # Set admin default to false
   in_root do
-    migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
+    migration = Dir.glob("db/migrate/*devise_create_users.rb").first
     create_user_migration = """
     def change
       create_table :users do |t|
@@ -166,6 +170,24 @@ def add_users
 
   # Add Devise masqueradable to users
   inject_into_file("app/models/user.rb", "lockable, :confirmable, :invitable, :omniauthable, :masqueradable, :", after: "devise :")
+
+  # Add avatar handling
+  avatar = """
+  has_one_attached :image
+
+  include Gravtastic
+
+  GRAVATAR_OPTIONS = { default: 'identicon', size: 256, rating: 'PG' }
+
+  gravtastic :email
+
+  def avatar
+    self.image || gravatar_url(GRAVATAR_OPTIONS)
+  end
+  """.strip
+
+  inject_into_file("app/models/user.rb", avatar + "\n\n", before: "\nend")
+
   # Remove trackable
   gsub_file "app/models/user.rb", /:trackable, /, ""
 end
@@ -306,6 +328,7 @@ after_bundle do
   setup_rspec
   setup_pg
   setup_kaminari
+  add_storage
   add_users
   add_sidekiq
   add_foreman
