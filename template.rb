@@ -131,7 +131,7 @@ def add_users
     add_column :users, :admin, :boolean, default: false
 
     ## Remove Trackable
-    remove_column :users, :sign_in_count,
+    remove_column :users, :sign_in_count
     remove_column :users, :current_sign_in_at
     remove_column :users, :last_sign_in_at
     remove_column :users, :current_sign_in_ip
