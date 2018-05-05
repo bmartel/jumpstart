@@ -156,7 +156,7 @@ def add_users
       add_index :users, :invitation_token,     unique: true
     end
     """.strip
-    gsub_file migration, /  def change.+end\n/, create_user_migration + "\n\n"
+    gsub_file migration, /  def change.+end/, create_user_migration + "\n\n"
   end
 
   requirement = Gem::Requirement.new("> 5.2")
