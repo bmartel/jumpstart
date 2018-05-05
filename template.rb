@@ -111,31 +111,34 @@ def add_users
   devise_changes = Dir["db/migrate/**/*devise_changes_to_users.rb"].first
   insert_into_file devise_changes, after: "  def change\n" do
     <<-'RUBY'
-    change_table :users do |t|
-      t.string :name,               null: false, default: ""
-      ## Confirmable
-      t.string   :confirmation_token
-      t.datetime :confirmed_at
-      t.datetime :confirmation_sent_at
-      t.string   :unconfirmed_email # Only if using reconfirmable
+    add_column :users :name, :string, null: false, default: ""
 
-      ## Lockable
-      t.integer  :failed_attempts, default: 0, null: false # Only if lock strategy is :failed_attempts
-      t.string   :unlock_token # Only if unlock strategy is :email or :both
-      t.datetime :locked_at
+    ## Confirmable
+    add_column :users :confirmation_token, :string
+    add_column :users :confirmed_at, :datetime
+    add_column :users :confirmation_sent_at, :datetime
+    add_column :users :unconfirmed_email, :string
 
-      ## Announcements
-      t.datetime :announcements_last_read_at
+    ## Lockable
+    add_column :users :failed_attempts, :integer, default: 0, null: false
+    add_column :users :unlock_token, :string
+    add_column :users :locked_at, :datetime
 
-      ## Admin
-      t.boolean :admin, default: false
+    ## Announcements
+    add_column :users :announcements_last_read_at, :datetime
 
-      ## Remove Trackable
-      t.remove :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip
+    ## Admin
+    add_column :users :admin, :boolean, default: false
 
-      t.index :users, :confirmation_token,   unique: true
-      t.index :users, :unlock_token,         unique: true
-    end
+    ## Remove Trackable
+    remove_column :users, :sign_in_count,
+    remove_column :users, :current_sign_in_at
+    remove_column :users, :last_sign_in_at
+    remove_column :users, :current_sign_in_ip
+    remove_column :users, :last_sign_in_ip
+
+    add_index :users, :confirmation_token,   unique: true
+    add_index :users, :unlock_token,         unique: true
     RUBY
   end
 
