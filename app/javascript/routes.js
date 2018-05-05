@@ -11,7 +11,7 @@ Vue.use(Meta);
 
 // Routes
 const routes = [
-  { path: '/', component: Index },
+  { path: '/', component: IndexPage },
 ];
 
 export default new Router({ routes });
