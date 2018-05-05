@@ -173,6 +173,7 @@ def add_users
 
   # Add avatar handling
   avatar = """
+
   has_one_attached :image
 
   include Gravtastic
@@ -184,9 +185,10 @@ def add_users
   def avatar
     self.image || gravatar_url(GRAVATAR_OPTIONS)
   end
-  """.strip
 
-  inject_into_file("app/models/user.rb", "\n\n" + avatar + "\n\n", before: "\nend")
+  """
+
+  inject_into_file("app/models/user.rb", avatar, before: "end")
 
   # Remove trackable
   gsub_file "app/models/user.rb", /:trackable, /, ""
