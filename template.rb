@@ -152,6 +152,12 @@ def add_users
   end
 end
 
+def add_routes
+  insert_into_file "config/routes.rb",
+  ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
+  after: "  devise_for :users"
+end
+
 def copy_templates
   directory "app", force: true
   directory "config", force: true
@@ -227,10 +233,6 @@ def add_administrate
 end
 
 def add_multiple_authentication
-    insert_into_file "config/routes.rb",
-    ', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }',
-    after: "  devise_for :users"
-
     generate "model Service user:references provider uid access_token access_token_secret refresh_token expires_at:datetime auth:text"
 
     template = """
@@ -302,6 +304,7 @@ after_bundle do
   add_friendly_id
 
   copy_templates
+  add_routes
 
   # Migrate
   rails_command "db:create"
