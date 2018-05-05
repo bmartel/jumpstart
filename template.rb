@@ -32,6 +32,7 @@ def add_gems
   gem 'pg_search'
   gem 'administrate', '~> 0.10.0'
   gem 'devise', '~> 4.4.3'
+  gem 'devise_invitable', '~> 1.7.0'
   gem 'devise_masquerade', '~> 0.6.0'
   gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
   gem 'mini_magick', '~> 4.8'
@@ -86,6 +87,7 @@ end
 def add_users
   # Install Devise
   generate "devise:install"
+  generate "devise_invitable:install"
 
   # Install Pundit policies
   generate "pundit:install"
@@ -97,6 +99,7 @@ def add_users
 
   # Create Devise User
   generate :devise, "User"
+  generate :devise_invitable, "User"
 
   # Set admin default to false
   in_root do
@@ -108,6 +111,15 @@ def add_users
         t.string :email,              null: false, default: ""
         t.string :name,               null: false, default: ""
         t.string :encrypted_password, null: false, default: ""
+
+        ## Invitable
+        t.string   :invitation_token
+        t.datetime :invitation_created_at
+        t.datetime :invitation_sent_at
+        t.datetime :invitation_accepted_at
+        t.integer  :invitation_limit
+        t.integer  :invited_by_id
+        t.string   :invited_by_type
 
         ## Recoverable
         t.string   :reset_password_token
@@ -137,9 +149,10 @@ def add_users
       add_index :users, :reset_password_token, unique: true
       add_index :users, :confirmation_token,   unique: true
       add_index :users, :unlock_token,         unique: true
+      add_index :users, :invitation_token,     unique: true
     end
     """.strip
-    gsub_file migration, /^  def change.+end$/, create_user_migration + "\n\n"
+    gsub_file migration, /  def change.+end\n/, create_user_migration + "\n\n"
   end
 
   requirement = Gem::Requirement.new("> 5.2")
@@ -152,7 +165,7 @@ def add_users
   end
 
   # Add Devise masqueradable to users
-  inject_into_file("app/models/user.rb", "lockable, :confirmable, :omniauthable, :masqueradable, :", after: "devise :")
+  inject_into_file("app/models/user.rb", "lockable, :confirmable, :invitable, :omniauthable, :masqueradable, :", after: "devise :")
   # Remove trackable
   gsub_file "app/models/user.rb", /:trackable, /, ""
 end
