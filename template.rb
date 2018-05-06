@@ -48,6 +48,8 @@ def add_gems
   gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
   gem_group :development, :test do
     gem 'rspec-rails'
+    gem 'capybara'
+    gem 'selenium-webdriver'
     gem 'factory_bot_rails'
     gem 'faker'
   end
@@ -80,12 +82,31 @@ def setup_rspec
   generate "rspec:install"
 end
 
+def setup_headless_chrome
+  insert_into_file "spec/spec_helper.rb", before: "RSpec.configure do |config|" do
+  <<-'RUBY'
+
+  require 'selenium-webdriver'
+
+  Capybara.register_driver :chrome do |app|
+    options = Selenium::WebDriver::Chrome::Options.new(
+      args: %w[headless disable-gpu no-sandbox]
+    )
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+  end
+
+  Capybara.javascript_driver = :chrome
+
+  RUBY
+  end
+end
+
 def setup_kaminari
   generate "kaminari:config"
 end
 
 def add_storage
-  generate "active_storage:install:migrations"
+  rails_command "active_storage:install"
 end
 
 def add_users
@@ -268,6 +289,7 @@ after_bundle do
   set_application_name
   stop_spring
   setup_rspec
+  setup_headless_chrome
   setup_pg
   setup_kaminari
   add_storage
