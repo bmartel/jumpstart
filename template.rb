@@ -85,7 +85,7 @@ end
 def setup_headless_chrome
   insert_into_file "spec/spec_helper.rb", before: "RSpec.configure do |config|" do
   <<-'RUBY'
-
+  require 'capybara/rspec'
   require 'selenium-webdriver'
 
   Capybara.register_driver :chrome do |app|
