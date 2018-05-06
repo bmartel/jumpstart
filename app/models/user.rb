@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   include Gravtastic
 
+  default_scope { with_attached_image }
+
   GRAVATAR_OPTIONS = { default: 'identicon', size: 256, rating: 'PG' }
 
   # Include default devise modules. Others available are:
@@ -14,6 +16,7 @@ class User < ApplicationRecord
   gravtastic :email
 
   def avatar
-    self.image || gravatar_url(GRAVATAR_OPTIONS)
+    return self.image if self.image.attached?
+    gravatar_url(GRAVATAR_OPTIONS)
   end
 end

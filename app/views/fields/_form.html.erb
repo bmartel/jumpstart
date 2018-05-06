@@ -1,0 +1,9 @@
+<div class="field-unit__label">
+  <%= f.label field.attribute %>
+</div>
+<div class="field-unit__field">
+  <% if field.data.attached? %>
+    <%= image_tag field.data %>
+  <% end %>
+  <%= f.file_field field.attribute %>
+</div>
