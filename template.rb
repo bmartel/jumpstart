@@ -176,6 +176,13 @@ def copy_templates
   directory "app", force: true
   directory "config", force: true
   directory "lib", force: true
+  directory "spec", force: true
+  copy_file ".babelrc", force: true
+  copy_file ".eslintrc.js", force: true
+  copy_file ".prettierrc", force: true
+  copy_file ".gitignore", force: true
+  copy_file ".eslintignore", force: true
+  copy_file ".editorconfig", force: true
 end
 
 def add_webpack
@@ -188,6 +195,35 @@ end
 
 def add_npm_packages
   run 'yarn add tailwindcss vuex vue-router vue-meta vue-turbolinks'
+  run 'yarn add --dev babel-preset-es2015 eslint babel-eslint jest babel-jest vue-jest jest-serializer-vue @vue/test-utils prettier prettier-eslint eslint-loader eslint-config-prettier eslint-plugin-import eslint-plugin-node eslint-plugin-prettier eslint-plugin-promise eslint-plugin-vue husky lint-staged'
+end
+
+def add_jest
+  insert_into_file "package.json", after: "  \"private\": true,\n" do
+  <<-'RUBY'
+  "scripts": {
+    "unit": "jest --config spec/javascript/jest.conf.js --coverage",
+    "test": "npm run unit",
+    "lint": "eslint --fix --ext .js,.vue app/javascript spec/javascript",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "npm run lint",
+      "git add"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not ie <= 10"
+  ],
+  RUBY
+  end
 end
 
 def add_tailwind
@@ -300,6 +336,7 @@ after_bundle do
   add_vuejs
   add_npm_packages
   add_tailwind
+  add_jest
   add_announcements
   add_notifications
   add_multiple_authentication

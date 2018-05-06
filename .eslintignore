@@ -1,0 +1,6 @@
+/public/
+/config/
+/dist/
+/*.js
+/spec/javascript/coverage/
+/app/assets/

@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Meta from 'vue-meta';
 
 // Pages
-import IndexPage from './pages/Index.vue';
+import IndexPage from '@/pages/Index.vue';
 
 // Use router and meta plugins
 Vue.use(Router);
