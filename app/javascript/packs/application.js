@@ -2,6 +2,7 @@ import 'babel-polyfill';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { sync } from 'vuex-router-sync';
 import store, { hydrate } from '@/store';
 import router from '@/routes';
 import App from '@/app';
