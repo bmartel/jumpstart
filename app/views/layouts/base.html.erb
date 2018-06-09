@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= Rails.configuration.application_name %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <%= csrf_meta_tags %>
+    <%= yield :meta %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= yield :css %>
+  </head>
+
+  <body>
+    <%= render 'shared/alerts' %>
+
+    <div class="container">
+      <%= yield %>
+    </div>
+
+    <% if @state %>
+      <script>
+        window.__INITIAL_STATE__ = <%= raw @state.to_json %>;
+      </script>
+    <% end %>
+
+    <%= javascript_pack_tag 'base', 'data-turbolinks-track': 'reload' %>
+    <%= yield :js %>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<% if flash.present? %>
+  <div class="fixed pin">
+    <% flash.each do |msg_type, message| %>
+      <div class="p-3 <%= alert_class_for(msg_type) %>">
+        <div class="container">
+          <button class="close" data-dismiss="alert"><span>×</span></button>
+          <%= message %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+-<% end %>
