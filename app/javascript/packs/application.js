@@ -4,7 +4,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import store, { hydrate } from '@/store';
 import router from '@/routes';
-import App from '@/App';
+import App from '@/app';
 import '@/styles/application.css';
 
 // Hydrate store data from Rails
