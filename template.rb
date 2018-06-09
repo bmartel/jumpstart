@@ -194,8 +194,8 @@ def add_vuejs
 end
 
 def add_npm_packages
-  run 'yarn add tailwindcss vuex vue-router vue-meta vue-turbolinks'
-  run 'yarn add --dev babel-preset-es2015 eslint babel-eslint jest babel-jest vue-jest jest-serializer-vue @vue/test-utils prettier prettier-eslint eslint-loader eslint-config-prettier eslint-plugin-import eslint-plugin-node eslint-plugin-prettier eslint-plugin-promise eslint-plugin-vue husky lint-staged'
+  run 'yarn add tailwindcss vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios babel-polyfill lodash date-fns'
+  run 'yarn add --dev babel-preset-es2015 eslint babel-eslint jest babel-jest vue-jest jest-serializer-vue @vue/test-utils prettier prettier-eslint eslint-loader eslint-config-prettier eslint-plugin-import eslint-plugin-node eslint-plugin-prettier eslint-plugin-promise eslint-plugin-vue purgecss-webpack-plugin@0.23.0 husky lint-staged'
 end
 
 def add_jest

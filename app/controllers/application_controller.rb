@@ -9,4 +9,11 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:name])
     end
+
+    def client_state
+      @state ||= {}
+      @state['csrfToken'] = form_authenticity_token
+      @state['auth'] = {}
+      @state['auth']['user'] = current_user || {}
+    end
 end

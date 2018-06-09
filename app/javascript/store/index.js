@@ -7,14 +7,17 @@ import mutations from '@/store/mutations';
 import getters from '@/store/getters';
 import modules from '@/store/modules';
 import plugins from '@/store/plugins';
+import { setCsrfToken } from '@/utils/axios';
 
 Vue.use(Vuex);
 
 export const hydrate = (store, data) => {
   if (data) {
-    store.replaceState(data);
+    setCsrfToken(data);
+    const storeState = store.state;
+    store.replaceState({ ...storeState, ...data });
   }
-}
+};
 
 export default new Vuex.Store({
   state,

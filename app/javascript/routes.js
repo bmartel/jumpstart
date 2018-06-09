@@ -10,8 +10,6 @@ Vue.use(Router);
 Vue.use(Meta);
 
 // Routes
-const routes = [
-  { path: '/', component: IndexPage },
-];
+const routes = [{ path: '/', component: IndexPage }];
 
 export default new Router({ routes });
