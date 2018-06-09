@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  export default {
-    metaInfo: {
-      title: 'VueJS Rails',
-    },
-  }
+export default {
+  metaInfo: {
+    title: 'VueJS Rails',
+  },
+};
 </script>
