@@ -1,8 +1,8 @@
 import 'babel-polyfill';
 
 import Rails from 'rails-ujs';
-import Turbolinks from 'turbolinks';
-import TurbolinksAdapter from 'vue-turbolinks';
+// import Turbolinks from 'turbolinks';
+// import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import store, { hydrate } from '@/store';
@@ -10,9 +10,10 @@ import App from '@/app';
 
 // Register any other modules
 
-Vue.use(TurbolinksAdapter);
+// Vue.use(TurbolinksAdapter);
 
-document.addEventListener('turbolinks:load', () => {
+// document.addEventListener('turbolinks:load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue({
     el: '#app',
     store,
@@ -22,4 +23,4 @@ document.addEventListener('turbolinks:load', () => {
 
 // Start Rails Turbolinks
 Rails.start();
-Turbolinks.start();
+// Turbolinks.start();
