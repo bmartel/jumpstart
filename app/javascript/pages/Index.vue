@@ -1,20 +1,33 @@
 <template>
   <div>
     <h1>{{ msg }}</h1>
-    <button
+    <menu-sheet
       v-if="loggedIn"
-      class="px-3 py-2 rounded"
-      @click="$store.dispatch('auth/logout')">Logout</button>
+      :items="items"
+      class="mt-6 max-w-xs shadow rounded" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import MenuSheet from '@/components/MenuSheet';
 
 export default {
+  components: {
+    MenuSheet,
+  },
+
   data() {
     return {
       msg: 'VueJS on Rails',
+      items: [
+        { label: 'brandonmartel@gmail.com' },
+        {
+          text: 'Logout',
+          prependIcon: 'log-out',
+          action: () => this.$store.dispatch('auth/logout'),
+        },
+      ],
     };
   },
   computed: {

@@ -5,13 +5,16 @@
       :messages="alerts" />
     <navbar
       :user="currentUser"
-      class="bg-green">
+      class="bg-blue">
       <span
         slot="brand"
         class="brand">
-        Project
+        <feather-icon
+          class="mr-1"
+          name="activity" />
+        Vine
       </span>
-      <template slot="actions"/>
+      <template slot="actions-right"/>
     </navbar>
     <div class="container px-2 md:px-0 mx-auto mt-6">
       <slot>
@@ -24,10 +27,12 @@
 <script>
 import Alert from '@/components/Alert';
 import Navbar from '@/components/Navbar';
+import FeatherIcon from '@/components/FeatherIcon';
 
 export default {
   components: {
     Alert,
+    FeatherIcon,
     Navbar,
   },
 
