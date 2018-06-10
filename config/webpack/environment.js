@@ -1,8 +1,28 @@
-const { environment } = require('@rails/webpacker')
-const custom = require('./custom')
-const vue =  require('./loaders/vue')
+const { environment } = require('@rails/webpacker');
+const webpack = require('webpack');
+const custom = require('./custom');
+const vue = require('./loaders/vue');
 
-environment.loaders.append('vue', vue)
-environment.config.merge(custom)
+environment.loaders.append('vue', vue);
+environment.config.merge(custom.config);
 
-module.exports = environment
+environment.plugins.append(
+  'CommonsChunkVendor',
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: module => {
+      // this assumes your vendor imports exist in the node_modules directory
+      return module.context && module.context.indexOf('node_modules') !== -1;
+    },
+  })
+);
+
+environment.plugins.append(
+  'CommonsChunkManifest',
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'manifest',
+    minChunks: Infinity,
+  })
+);
+
+module.exports = environment;

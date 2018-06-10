@@ -9,14 +9,6 @@
     <%= yield :meta %>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= yield :css %>
-  </head>
-
-  <body>
-    <%= render 'shared/alerts' %>
-
-    <div class="container">
-      <%= yield %>
-    </div>
 
     <% if @state %>
       <script>
@@ -24,7 +16,18 @@
       </script>
     <% end %>
 
+    <%= javascript_pack_tag 'manifest', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'vendor', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'base', 'data-turbolinks-track': 'reload' %>
     <%= yield :js %>
+  </head>
+
+  <body class="font-sans">
+    <%= render 'shared/alerts' %>
+
+    <div class="container px-2 pt-2 sm:mx-auto sm:pt-6">
+      <%= yield %>
+    </div>
+
   </body>
 </html>

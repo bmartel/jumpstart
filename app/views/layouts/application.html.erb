@@ -7,7 +7,7 @@
     <%= stylesheet_pack_tag 'application', media: 'all'  %>
   </head>
 
-  <body>
+  <body class="font-sans">
 
     <div id="app"></div>
 
@@ -17,6 +17,8 @@
       </script>
     <% end %>
 
+    <%= javascript_pack_tag "manifest" %>
+    <%= javascript_pack_tag "vendor" %>
     <%= javascript_pack_tag 'application' %>
   </body>
 </html>
