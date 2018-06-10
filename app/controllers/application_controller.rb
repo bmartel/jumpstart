@@ -25,6 +25,8 @@ class ApplicationController < ActionController::Base
       @state ||= {}
       @state['csrfToken'] = form_authenticity_token
       @state['auth'] = {}
+      @state['alert'] = {}
+      @state['alert']['messages'] = flash || [];
       @state['auth']['masquerade'] = user_masquerade?
       @state['auth']['user'] = current_user || {}
     end

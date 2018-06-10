@@ -1,5 +1,8 @@
 <template>
   <div>
+    <alert
+      v-if="hasAlerts"
+      :messages="alerts" />
     <navbar
       :user="currentUser"
       class="bg-green">
@@ -19,16 +22,25 @@
 </template>
 
 <script>
+import Alert from '@/components/Alert';
 import Navbar from '@/components/Navbar';
 
 export default {
   components: {
+    Alert,
     Navbar,
   },
 
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    alerts() {
+      return this.$store.state.alert.messages;
+    },
+
+    hasAlerts() {
+      return this.$store.getters['alert/hasAlerts'];
     },
   },
 
