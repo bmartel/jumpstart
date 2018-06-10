@@ -12,4 +12,4 @@ Vue.use(Meta);
 // Routes
 const routes = [{ path: '/', component: IndexPage }];
 
-export default new Router({ routes });
+export default new Router({ mode: 'history', routes });

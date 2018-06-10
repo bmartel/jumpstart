@@ -12,23 +12,12 @@ import '@/styles/application.css';
 hydrate(store, window.__INITIAL_STATE__);
 
 // Sync router with the store
-sync(store, router);
+const unsync = sync(store, router);
 
-// **
-// * If using Turbolinks
-// * Remember to include the turbolinks application.js
-// **
-
-// import TurbolinksAdapter from 'vue-turbolinks';
-// Vue.use(TurbolinksAdapter);
-
-// document.addEventListener('turbolinks:load', () => {
-//   var vueapp = new Vue({
-//     el: '#app',
-//     store,
-//     render: h => h(App)
-//   });
-// });
+// Release the router sync when navigating to turbolinks page
+document.addEventListener('turbolinks:before-visit', function() {
+  unsync();
+});
 
 new Vue({
   el: '#app',

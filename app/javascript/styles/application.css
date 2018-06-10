@@ -36,6 +36,11 @@
  * @import "components/forms";
  */
 
+.brand {
+  @apply .inline-flex .text-lg .text-white .items-center;
+  min-height: 32px;
+}
+
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.

@@ -19,4 +19,10 @@ class User < ApplicationRecord
     return self.image if self.image.attached?
     gravatar_url(GRAVATAR_OPTIONS)
   end
+
+  def as_json(*)
+    super.except("created_at", "updated_at").tap do |hash|
+      hash["avatar"] = avatar
+    end
+  end
 end
