@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 sticky pin-t shadow-lg">
+  <div class="py-2 sticky z-10 pin-t shadow">
     <div class="container px-2 md:px-0 mx-auto flex items-center justify-between">
       <div class="flex items-center">
         <slot name="brand"/>
@@ -10,15 +10,21 @@
       <slot/>
 
       <div
-        v-if="user.id"
         class="flex items-center">
         <slot name="actions-right"/>
-        <avatar :url="user.avatar" />
-      </div>
-      <div v-else>
-        <a 
-          href="/users/sign_in" 
-          class="text-white">Sign in</a>
+        <dropdown-menu
+          v-if="user.id"
+          :items="items"
+          menu-style="max-w-xs shadow rounded mt-2">
+          <avatar
+            :url="user.avatar"
+            />
+        </dropdown-menu>
+        <div v-else>
+          <a
+            href="/users/sign_in"
+            class="text-white">Sign in</a>
+        </div>
       </div>
     </div>
   </div>
@@ -26,10 +32,12 @@
 
 <script>
 import Avatar from '@/components/Avatar';
+import DropdownMenu from '@/components/DropdownMenu';
 
 export default {
   components: {
     Avatar,
+    DropdownMenu,
   },
 
   props: {
@@ -37,6 +45,19 @@ export default {
       type: Object,
       default: () => ({}),
     },
+  },
+
+  data() {
+    return {
+      items: [
+        { label: this.user.email },
+        {
+          text: 'Logout',
+          prependIcon: 'log-out',
+          action: () => this.$store.dispatch('auth/logout'),
+        },
+      ],
+    };
   },
 };
 </script>

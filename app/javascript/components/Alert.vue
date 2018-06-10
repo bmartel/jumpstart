@@ -1,5 +1,5 @@
 <template>
-  <div class="z-10 fixed pin-t pin-x">
+  <div class="z-20 fixed pin-t pin-x">
     <div
       v-for="(message, index) in messages"
       :key="index"
