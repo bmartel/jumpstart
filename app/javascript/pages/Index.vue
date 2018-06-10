@@ -18,10 +18,12 @@ export default {
   },
 
   data() {
+    const user = this.$store.state.auth.user;
+
     return {
       msg: 'VueJS on Rails',
       items: [
-        { label: 'brandonmartel@gmail.com' },
+        { label: user.email },
         {
           text: 'Logout',
           prependIcon: 'log-out',
