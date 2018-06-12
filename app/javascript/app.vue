@@ -6,14 +6,26 @@
     <navbar
       :user="currentUser"
       class="bg-primary">
-      <span
+      <router-link
+        v-if="spa"
         slot="brand"
+        to="/"
         class="brand">
         <feather-icon
           class="mr-1"
           name="activity" />
-        Vine
-      </span>
+        {{ appName }}
+      </router-link>
+      <a
+        v-else
+        slot="brand"
+        href="/"
+        class="brand">
+        <feather-icon
+          class="mr-1"
+          name="activity" />
+        {{ appName }}
+      </a>
       <template slot="actions-right"/>
     </navbar>
     <div class="container px-2 md:px-0 mx-auto mt-6">
@@ -36,6 +48,19 @@ export default {
     Navbar,
   },
 
+  props: {
+    spa: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
+  data() {
+    return {
+      appName: 'Vine',
+    };
+  },
+
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -49,8 +74,10 @@ export default {
     },
   },
 
-  metaInfo: {
-    title: 'VueJS Rails',
+  metaInfo() {
+    return {
+      title: this.appName,
+    };
   },
 };
 </script>

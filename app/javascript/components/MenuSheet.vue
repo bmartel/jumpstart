@@ -101,7 +101,7 @@ export default {
     },
     itemBackground: {
       type: String,
-      default: 'hover:bg-grey-lighter cursor-pointer',
+      default: 'transition hover:bg-grey-lighter cursor-pointer',
     },
     itemLayout: {
       type: String,

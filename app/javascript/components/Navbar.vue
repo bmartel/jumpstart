@@ -18,7 +18,7 @@
           menu-style="max-w-xs shadow rounded mt-2">
           <avatar
             :url="user.avatar"
-            />
+          />
         </dropdown-menu>
         <div v-else>
           <a

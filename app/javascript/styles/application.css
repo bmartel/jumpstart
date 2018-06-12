@@ -37,7 +37,7 @@
  */
 
 .brand {
-  @apply .inline-flex .text-lg .text-white .items-center;
+  @apply .inline-flex .no-underline .text-lg .text-white .items-center;
   min-height: 32px;
 }
 

@@ -8,6 +8,9 @@ import Vuex from 'vuex';
 import store, { hydrate } from '@/store';
 import App from '@/app';
 
+// Hydrate store data from Rails
+hydrate(store, window.__INITIAL_STATE__);
+
 // Register any other modules
 
 // Vue.use(TurbolinksAdapter);
