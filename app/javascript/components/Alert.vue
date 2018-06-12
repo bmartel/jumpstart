@@ -4,12 +4,14 @@
       v-for="(message, index) in messages"
       :key="index"
       :class="styles(message)"
-      class="text-white py-4">
-      <div class="flex items-center container px-2 md:px-0 mx-auto">
+      class="text-white py-3">
+      <div class="flex items-center justify-center container px-2 md:px-0 mx-auto">
         <button
-          class="text-white px-2 mr-2"
+          class="text-white px-2 mr-2 mt-1 hover:opacity-50"
           @click="remove(index)"
-        >×</button>
+        ><feather-icon
+          :size="20"
+          name="x" /></button>
         <span>{{ text(message) }}</span>
       </div>
     </div>
@@ -17,7 +19,13 @@
 </template>
 
 <script>
+import FeatherIcon from '@/components/FeatherIcon';
+
 export default {
+  components: {
+    FeatherIcon,
+  },
+
   props: {
     messages: {
       type: Array,
@@ -32,11 +40,12 @@ export default {
 
     styles(message) {
       const { type } = this.extract(message);
+
       return {
-        ['bg-green-light']: type === 'success',
-        ['bg-red-light']: type === 'alert',
-        ['bg-red-light']: type === 'error',
-        ['bg-blue-light']: type === 'notice',
+        ['bg-success']: type === 'success',
+        ['bg-error']: type === 'error',
+        ['bg-warning']: type === 'alert',
+        ['bg-info']: type === 'notice',
       };
     },
 

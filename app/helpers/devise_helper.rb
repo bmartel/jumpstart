@@ -4,7 +4,7 @@ module DeviseHelper
 
     messages = resource.errors.full_messages.map { |msg| content_tag(:div, msg) }.join
     html = <<-HTML
-    <div class="py-2 text-red-light">
+    <div class="py-2 text-error>
       #{messages}
     </div>
     HTML

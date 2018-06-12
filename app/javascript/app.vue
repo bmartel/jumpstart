@@ -5,7 +5,7 @@
       :messages="alerts" />
     <navbar
       :user="currentUser"
-      class="bg-blue">
+      class="bg-primary">
       <span
         slot="brand"
         class="brand">

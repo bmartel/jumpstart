@@ -11,9 +11,9 @@ module AnnouncementsHelper
 
   def announcement_class(type)
     {
-      "new" => "text-green",
-      "update" => "text-blue",
-      "fix" => "text-red",
+      "new" => "text-success",
+      "update" => "text-info",
+      "fix" => "text-error",
     }.fetch(type, "text-green")
   end
 end
