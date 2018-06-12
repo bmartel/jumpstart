@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-reset py-2">
+  <ul class="list-reset py-2 bg-white">
     <li
       v-for="(item, index) in items"
       :key="index">

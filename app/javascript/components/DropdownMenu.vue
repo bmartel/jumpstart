@@ -1,11 +1,13 @@
 <template>
   <div class="flex flex-col">
-    <div 
+    <div
       class="cursor-pointer"
-      @click.prevent="toggle">
+      @click="toggleModal">
       <slot />
     </div>
-    <div class="relative">
+    <div
+      ref="modalTarget"
+      class="relative">
       <menu-sheet
         v-if="state"
         :items="items"
@@ -15,17 +17,16 @@
 </template>
 
 <script>
+import Modal from '@/mixins/modal';
+
 import MenuSheet from '@/components/MenuSheet';
 
 export default {
   components: {
     MenuSheet,
   },
+  mixins: [Modal],
   props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
     items: {
       type: Array,
       default: () => [],
@@ -37,27 +38,6 @@ export default {
     menuStyle: {
       type: String,
       default: '',
-    },
-  },
-  data() {
-    return {
-      active: this.value,
-    };
-  },
-  computed: {
-    state: {
-      get() {
-        return this.active;
-      },
-      set(val) {
-        this.active = val;
-        this.$emit('input', val);
-      },
-    },
-  },
-  methods: {
-    toggle() {
-      this.state = !this.state;
     },
   },
 };

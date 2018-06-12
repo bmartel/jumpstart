@@ -19,7 +19,7 @@ export default {
     },
     size: {
       type: Number,
-      default: 18,
+      default: 16,
     },
   },
   computed: {
