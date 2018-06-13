@@ -38,7 +38,7 @@
 
   <div class="mt-6 flex">
     <button
-      v-action:delete.confirm="{url: '<%= registration_path(resource_name) %>', message: 'Are you sure?', after: () => window.location = '/' }"
+      v-action:delete.confirm="{url: '<%= registration_path(resource_name) %>', message: 'Are you sure?', redirect: '/'  }"
       class="w-full md:w-1/2 md:mr-2 px-4 py-3 rounded text-white transition bg-red hover:opacity-75 cursor-pointer"
     >
       Cancel my account
