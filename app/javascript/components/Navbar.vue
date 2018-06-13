@@ -33,6 +33,7 @@
 <script>
 import Avatar from '@/components/Avatar';
 import DropdownMenu from '@/components/DropdownMenu';
+import endpoint from '@/endpoints';
 
 export default {
   components: {
@@ -51,6 +52,12 @@ export default {
     return {
       items: [
         { label: this.user.email },
+        {
+          text: 'Settings',
+          prependIcon: 'settings',
+          url: endpoint.users.edit,
+        },
+        { divider: true },
         {
           text: 'Logout',
           prependIcon: 'log-out',

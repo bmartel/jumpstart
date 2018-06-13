@@ -8,6 +8,7 @@ export default {
     confirmation: '/users/confirmation',
     unlock: '/users/unlock',
     invitation: '/users/invitation',
+    edit: '/users/edit',
     masquerade: param => `/users/masquerade/${param}`,
   },
   storage: {

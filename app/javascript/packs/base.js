@@ -1,10 +1,11 @@
 import 'babel-polyfill';
 
-import Rails from 'rails-ujs';
+// import Rails from 'rails-ujs';
 // import Turbolinks from 'turbolinks';
 // import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import '@/directives/action';
 import store, { hydrate } from '@/store';
 import App from '@/app';
 
@@ -25,5 +26,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Start Rails Turbolinks
-Rails.start();
+// Rails.start();
 // Turbolinks.start();

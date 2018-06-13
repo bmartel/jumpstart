@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-reset py-2 bg-white">
+  <ul class="list-reset bg-white">
     <li
       v-for="(item, index) in items"
       :key="index">
@@ -13,12 +13,12 @@
         <feather-icon
           v-if="item.prependIcon"
           :name="item.prependIcon"
-          class="mr-1" />
+          :class="iconPrependStyles" />
         {{ item.text }}
         <feather-icon
           v-if="item.appendIcon"
           :name="item.appendIcon"
-          class="ml-1" />
+          :class="iconAppendStyles" />
       </div>
       <div
         v-else-if="item.label"
@@ -26,12 +26,12 @@
         <feather-icon
           v-if="item.prependIcon"
           :name="item.prependIcon"
-          class="mr-1" />
+          :class="iconPrependStyles" />
         {{ item.label }}
         <feather-icon
           v-if="item.appendIcon"
           :name="item.appendIcon"
-          class="ml-1" />
+          :class="iconAppendStyles" />
       </div>
       <button
         v-else-if="item.action"
@@ -40,13 +40,27 @@
         <feather-icon
           v-if="item.prependIcon"
           :name="item.prependIcon"
-          class="mr-1" />
+          :class="iconPrependStyles" />
         {{ item.text }}
         <feather-icon
           v-if="item.appendIcon"
           :name="item.appendIcon"
-          class="ml-1" />
+          :class="iconAppendStyles" />
       </button>
+      <router-link
+        v-else-if="item.route"
+        :to="item.route"
+        :class="`${itemText} ${itemBackground} ${itemLayout}`">
+        <feather-icon
+          v-if="item.prependIcon"
+          :name="item.prependIcon"
+          :class="iconPrependStyles" />
+        {{ item.text }}
+        <feather-icon
+          v-if="item.appendIcon"
+          :name="item.appendIcon"
+          :class="iconAppendStyles" />
+      </router-link>
       <a
         v-else-if="item.url"
         :href="item.url"
@@ -54,12 +68,12 @@
         <feather-icon
           v-if="item.prependIcon"
           :name="item.prependIcon"
-          class="mr-1" />
+          :class="iconPrependStyles" />
         {{ item.text }}
         <feather-icon
           v-if="item.appendIcon"
           :name="item.appendIcon"
-          class="ml-1" />
+          :class="iconAppendStyles" />
       </a>
       <div
         v-else
@@ -67,12 +81,12 @@
         <feather-icon
           v-if="item.prependIcon"
           :name="item.prependIcon"
-          class="mr-1" />
+          :class="iconPrependStyles" />
         {{ item.text }}
         <feather-icon
           v-if="item.appendIcon"
           :name="item.appendIcon"
-          class="ml-1" />
+          :class="iconAppendStyles" />
       </div>
     </li>
   </ul>
@@ -95,9 +109,17 @@ export default {
       type: String,
       default: 'border-t',
     },
+    iconAppendStyles: {
+      type: String,
+      default: 'ml-2',
+    },
+    iconPrependStyles: {
+      type: String,
+      default: 'mr-2',
+    },
     itemText: {
       type: String,
-      default: 'text-grey-dark text-sm',
+      default: 'no-underline text-grey-dark text-sm',
     },
     itemBackground: {
       type: String,

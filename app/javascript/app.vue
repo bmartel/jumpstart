@@ -10,7 +10,7 @@
         v-if="spa"
         slot="brand"
         to="/"
-        class="brand">
+        class="brand transition hover:opacity-75">
         <feather-icon
           class="mr-1"
           name="activity" />
@@ -20,7 +20,7 @@
         v-else
         slot="brand"
         href="/"
-        class="brand">
+        class="brand transition hover:opacity-75">
         <feather-icon
           class="mr-1"
           name="activity" />
