@@ -20,10 +20,37 @@
             :url="user.avatar"
           />
         </dropdown-menu>
-        <div v-else>
-          <a
-            href="/users/sign_in"
-            class="text-white">Sign in</a>
+        <div
+          v-else
+          class="flex items-center">
+          <div
+            :class="{'border-white': currentUrl(signinUrl)}"
+            class="mr-6 md:py-1 border-transparent md:border-b-2 hover:border-white transition inline-flex items-center">
+            <a
+              :href="signinUrl"
+              class="text-white no-underline font-thin inline-flex items-center">
+              <span class="hidden md:inline-flex">Sign in</span>
+              <feather-icon
+                :size="20"
+                class="md:hidden"
+                name="log-in" />
+            </a>
+          </div>
+
+          <div
+            :class="{'md:bg-transparent': !currentUrl(signupUrl), 'md:bg-white': currentUrl(signupUrl) }"
+            class="group md:py-1 md:px-2 rounded md:border-2 border-white hover:bg-white transition inline-flex items-center">
+            <a
+              :class="{'text-white': !currentUrl(signupUrl), 'md:text-primary': currentUrl(signupUrl)}"
+              :href="signupUrl"
+              class="group-hover:text-primary no-underline font-thin inline-flex items-center">
+              <span class="hidden md:inline-flex">Sign up</span>
+              <feather-icon
+                :size="20"
+                class="md:hidden"
+                name="user" />
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -34,11 +61,14 @@
 import Avatar from '@/components/Avatar';
 import DropdownMenu from '@/components/DropdownMenu';
 import endpoint from '@/endpoints';
+import FeatherIcon from '@/components/FeatherIcon';
+import { currentUrl } from '@/utils/route';
 
 export default {
   components: {
     Avatar,
     DropdownMenu,
+    FeatherIcon,
   },
 
   props: {
@@ -50,6 +80,8 @@ export default {
 
   data() {
     return {
+      signinUrl: endpoint.users.signin,
+      signupUrl: endpoint.users.signup,
       items: [
         { label: this.user.email },
         {
@@ -71,5 +103,7 @@ export default {
       ],
     };
   },
+
+  methods: { currentUrl },
 };
 </script>

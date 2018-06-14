@@ -2,7 +2,7 @@ export default {
   announcements: '/announcements',
   notifications: '/notifications',
   users: {
-    register: '/users',
+    signup: '/users/sign_up',
     signin: '/users/sign_in',
     signout: '/users/sign_out',
     password: '/users/password',
