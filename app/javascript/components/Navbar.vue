@@ -25,7 +25,7 @@
           class="flex items-center">
           <div
             :class="{'border-white': currentUrl(signinUrl)}"
-            class="mr-6 md:py-1 border-transparent md:border-b-2 hover:border-white transition inline-flex items-center">
+            class="mr-6 py-1 border-transparent border-b-2 hover:border-white transition inline-flex items-center">
             <a
               :href="signinUrl"
               class="text-white no-underline font-thin inline-flex items-center">
@@ -38,10 +38,10 @@
           </div>
 
           <div
-            :class="{'md:bg-transparent': !currentUrl(signupUrl), 'md:bg-white': currentUrl(signupUrl) }"
-            class="group md:py-1 md:px-2 rounded md:border-2 border-white hover:bg-white transition inline-flex items-center">
+            :class="{'md:bg-transparent': !currentUrl(signupUrl), 'bg-white': currentUrl(signupUrl) }"
+            class="group p-1 md:py-1 md:px-2 rounded border-2 border-white hover:bg-white transition inline-flex items-center">
             <a
-              :class="{'text-white': !currentUrl(signupUrl), 'md:text-primary': currentUrl(signupUrl)}"
+              :class="{'text-white': !currentUrl(signupUrl), 'text-primary': currentUrl(signupUrl)}"
               :href="signupUrl"
               class="group-hover:text-primary no-underline font-thin inline-flex items-center">
               <span class="hidden md:inline-flex">Sign up</span>
