@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col">
     <div
-      class="cursor-pointer"
+      class="cursor-pointer flex items-center"
       @click="toggleModal">
       <slot />
     </div>
     <div
       ref="modalTarget"
-      class="relative">
+      class="relative mt-px">
       <menu-sheet
         v-if="state"
         :items="items"

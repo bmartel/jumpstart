@@ -41,6 +41,9 @@
   min-height: 32px;
 }
 
+.navbar {
+  min-height: 50px;
+}
 /**
  * This injects all of Tailwind's utility classes, generated based on your
  * config file.

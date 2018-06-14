@@ -1,4 +1,6 @@
 export default {
+  announcements: '/announcements',
+  notifications: '/notifications',
   users: {
     register: '/users',
     signin: '/users/sign_in',
@@ -7,7 +9,7 @@ export default {
     cancel: '/users/cancel',
     confirmation: '/users/confirmation',
     unlock: '/users/unlock',
-    invitation: '/users/invitation',
+    invitation: '/users/invitation/new',
     edit: '/users/edit',
     masquerade: param => `/users/masquerade/${param}`,
   },

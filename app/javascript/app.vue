@@ -26,7 +26,32 @@
           name="activity" />
         {{ appName }}
       </a>
-      <template slot="actions-right"/>
+      <ul
+        slot="actions-right"
+        class="list-reset flex">
+        <li
+          :class="{'border-white opacity-100': currentRoute(announcementsUrl)}"
+          class="mr-6 md:py-1 border-transparent md:border-b-2 opacity-50 hover:opacity-100 hover:border-white transition inline-flex items-center"><a
+            :href="announcementsUrl"
+            class="text-white no-underline font-thin inline-flex items-center">
+            <span class="hidden md:inline-flex">Announcements</span>
+            <feather-icon
+              :size="20"
+              class="md:hidden"
+              name="radio" />
+        </a></li>
+        <li
+          :class="{'border-white opacity-100': currentRoute(notificationsUrl)}"
+          class="mr-6 md:py-1 border-transparent md:border-b-2 opacity-50 hover:opacity-100 hover:border-white transition inline-flex items-center"><a
+            :href="notificationsUrl"
+            class="text-white no-underline font-thin">
+            <span class="hidden md:inline-flex">Notifications</span>
+            <feather-icon
+              :size="20"
+              class="md:hidden"
+              name="bell" />
+        </a></li>
+      </ul>
     </navbar>
     <div class="container px-2 md:px-0 mx-auto mt-6">
       <slot>
@@ -40,6 +65,7 @@
 import Alert from '@/components/Alert';
 import Navbar from '@/components/Navbar';
 import FeatherIcon from '@/components/FeatherIcon';
+import endpoint from '@/endpoints';
 
 export default {
   components: {
@@ -58,6 +84,8 @@ export default {
   data() {
     return {
       appName: 'Vine',
+      announcementsUrl: endpoint.announcements,
+      notificationsUrl: endpoint.notifications,
     };
   },
 
@@ -71,6 +99,12 @@ export default {
 
     hasAlerts() {
       return this.$store.getters['alert/hasAlerts'];
+    },
+  },
+
+  methods: {
+    currentRoute(url) {
+      return window.location.pathname === url;
     },
   },
 

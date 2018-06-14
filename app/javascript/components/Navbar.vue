@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 sticky z-10 pin-t shadow">
+  <div class="navbar flex items-center sticky z-10 pin-t shadow">
     <div class="container px-2 md:px-0 mx-auto flex items-center justify-between">
       <div class="flex items-center">
         <slot name="brand"/>
@@ -52,6 +52,11 @@ export default {
     return {
       items: [
         { label: this.user.email },
+        {
+          text: 'Invite',
+          prependIcon: 'user-plus',
+          url: endpoint.users.invitation,
+        },
         {
           text: 'Settings',
           prependIcon: 'settings',

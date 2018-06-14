@@ -1,4 +1,5 @@
 class AnnouncementsController < ApplicationController
+  layout "base"
   before_action :mark_as_read, if: :user_signed_in?
 
   def index
