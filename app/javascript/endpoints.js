@@ -1,4 +1,5 @@
 export default {
+  admin: '/admin',
   announcements: '/announcements',
   notifications: '/notifications',
   users: {

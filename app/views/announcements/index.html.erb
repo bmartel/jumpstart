@@ -1,28 +1,27 @@
-<h1>What's New</h1>
+<div class="max-w-lg mx-auto">
+  <h1 class="mb-6">What's New</h1>
+  <% @announcements.each_with_index do |announcement, index| %>
+    <% if index != 0 %>
+      <div class="border-t w-full my-6"></div>
+    <% end %>
 
-<div class="card">
-  <div class="card-body">
-    <% @announcements.each_with_index do |announcement, index| %>
-      <% if index != 0 %>
-        <div class="row"><div class="col"><hr /></div></div>
+    <div class="flex flex-col sm:flex-row" id="<%= dom_id(announcement) %>">
+      <%= link_to announcements_path(anchor: dom_id(announcement)), class: 'text-xs sm:text-sm mb-2 sm:mb-0 no-underline' do %>
+        <strong class="uppercase text-secondary"><%= announcement.published_at.strftime("%b %d") %></strong>
       <% end %>
-
-      <div class="row announcement" id="<%= dom_id(announcement) %>">
-        <div class="col-sm-1 text-center">
-          <%= link_to announcements_path(anchor: dom_id(announcement)) do %>
-            <strong><%= announcement.published_at.strftime("%b %d") %></strong>
-          <% end %>
-        </div>
-        <div class="col">
+      <div class="sm:ml-6 sm:flex-1">
+        <div class="mb-2 sm:text-xl">
           <strong class="<%= announcement_class(announcement.announcement_type) %>"><%= announcement.announcement_type.titleize %>:</strong>
           <strong><%= announcement.name %></strong>
+        </div>
+        <div>
           <%= simple_format announcement.description %>
         </div>
       </div>
-    <% end %>
+    </div>
+  <% end %>
 
-    <% if @announcements.empty? %>
-      <div>Exciting stuff coming very soon!</div>
-    <% end %>
-  </div>
+  <% if @announcements.empty? %>
+    <div>Exciting stuff coming very soon!</div>
+  <% end %>
 </div>

@@ -94,6 +94,12 @@ export default {
           prependIcon: 'settings',
           url: endpoint.users.edit,
         },
+        {
+          text: 'Admin',
+          prependIcon: 'lock',
+          url: endpoint.admin,
+          skip: this.user.admin !== true,
+        },
         { divider: true },
         {
           text: 'Logout',

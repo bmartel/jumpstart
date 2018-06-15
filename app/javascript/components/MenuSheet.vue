@@ -1,7 +1,7 @@
 <template>
   <ul class="list-reset bg-white">
     <li
-      v-for="(item, index) in items"
+      v-for="(item, index) in filteredItems"
       :key="index">
 
       <div
@@ -128,6 +128,11 @@ export default {
     itemLayout: {
       type: String,
       default: 'w-full flex items-center p-3',
+    },
+  },
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => !item.skip);
     },
   },
 };
