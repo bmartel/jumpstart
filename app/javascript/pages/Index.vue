@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       msg: 'Welcome to your app!',
-      description: 'This is a special scaffold to help you quickly get working with VueJS with Rails.',
+      description: 'This is a special scaffold to help you quickly get working with VueJS and Rails.',
     };
   },
 };
