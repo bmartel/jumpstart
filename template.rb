@@ -9,15 +9,15 @@ require "shellwords"
 def add_template_repository_to_source_path
   if __FILE__ =~ %r{\Ahttps?://}
     require "tmpdir"
-    source_paths.unshift(tempdir = Dir.mktmpdir("jumpstart-"))
+    source_paths.unshift(tempdir = Dir.mktmpdir("vine-"))
     at_exit { FileUtils.remove_entry(tempdir) }
     git clone: [
       "--quiet",
-      "https://github.com/bmartel/jumpstart.git",
+      "https://github.com/bmartel/vine.git",
       tempdir
     ].map(&:shellescape).join(" ")
 
-    if (branch = __FILE__[%r{jumpstart/(.+)/template.rb}, 1])
+    if (branch = __FILE__[%r{vine/(.+)/template.rb}, 1])
       Dir.chdir(tempdir) { git checkout: branch }
     end
   else
@@ -52,6 +52,17 @@ def add_gems
     gem 'selenium-webdriver'
     gem 'factory_bot_rails'
     gem 'faker'
+  end
+end
+
+def set_application_config
+  application do
+  <<-'RUBY'
+    config.generators do |g|
+      g.stylesheets false
+      g.javascripts false
+    end
+  RUBY
   end
 end
 
@@ -316,6 +327,7 @@ add_template_repository_to_source_path
 add_gems
 
 after_bundle do
+  set_application_config
   set_application_name
   stop_spring
   setup_rspec
