@@ -30,3 +30,4 @@
 yarn-debug.log*
 .yarn-integrity
 /spec/javascript/coverage
+docker-compose.override.yml

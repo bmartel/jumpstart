@@ -24,6 +24,12 @@ class TailwindExtractor {
 }
 
 module.exports = {
+  watchOptions: {
+    poll: true,
+  },
+  devServer: {
+    host: '0.0.0.0',
+  },
   config: {
     resolve: {
       alias: {

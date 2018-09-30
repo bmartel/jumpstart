@@ -28,7 +28,7 @@ end
 def add_gems
   gem 'pundit'
   gem 'enumerize'
-  gem 'kaminari'
+  gem 'pagy'
   gem 'pg_search'
   gem 'administrate', '~> 0.10.0'
   gem 'devise', '~> 4.4.3'
@@ -112,8 +112,8 @@ def setup_headless_chrome
   end
 end
 
-def setup_kaminari
-  generate "kaminari:config"
+def setup_pagy
+  generate "pagy:config"
 end
 
 def add_storage
@@ -198,6 +198,8 @@ end
 
 def add_webpack
   rails_command 'webpacker:install'
+  environment "config.webpacker.check_yarn_integrity = false",
+            env: 'development'
 end
 
 def add_vuejs
@@ -224,10 +226,6 @@ def add_jest
       "git add"
     ]
   },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
   "browserslist": [
     "last 2 versions",
     "> 1%",
@@ -250,6 +248,13 @@ end
 
 def add_foreman
   copy_file "Procfile"
+end
+
+def add_docker
+  directory "docker", force: true
+  copy_file "Dockerfile"
+  copy_file "docker-compose.yml"
+  copy_file ".dockerignore", force: true
 end
 
 def add_announcements
@@ -324,6 +329,8 @@ end
 # Main setup
 add_template_repository_to_source_path
 
+add_docker
+
 add_gems
 
 after_bundle do
@@ -333,7 +340,7 @@ after_bundle do
   setup_rspec
   setup_headless_chrome
   setup_pg
-  setup_kaminari
+  setup_pagy
   add_storage
   add_users
   add_sidekiq
@@ -360,7 +367,6 @@ after_bundle do
   add_whenever
 
   add_sitemap
-
 
   git :init
   git add: "."

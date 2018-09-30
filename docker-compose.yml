@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:10-alpine
+    ports:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:4-alpine
+    ports:
+      - "6379"
+    volumes:
+      - redis_data:/data
+  app:
+    build:
+      context: .
+      args:
+        RAILS_ENV: development
+    environment:
+      PORT: 3000
+      DB_HOST: postgres
+      DB_NAME: app
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000"
+    links:
+      - postgres
+      - redis
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+      args:
+        APP_DOMAIN: www.example.com
+        APP_PATH: /app
+        APP_PORT: 3000
+    ports:
+      - 3000:80
+    links:
+      - app
+    depends_on:
+      - app
+    volumes:
+      - ./public:/app
+  worker:
+    build:
+      context: .
+      args:
+        RAILS_ENV: development
+    command: bundle exec sidekiq
+    environment:
+      PORT: 3001
+      DB_HOST: postgres
+      DB_NAME: app
+      REDIS_URL: redis://redis:6379
+    links:
+      - postgres
+      - redis
+    depends_on:
+      - app
+    volumes:
+      - .:/usr/src/app
+volumes:
+  node_modules:
+  postgres_data:
+  redis_data:
