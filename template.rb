@@ -64,8 +64,6 @@ def set_application_config
     end
   RUBY
   end
-
-  environment "config.force_ssl = ENV['RAILS_FORCE_SSL'] || false"
 end
 
 def set_application_name
