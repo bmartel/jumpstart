@@ -40,9 +40,7 @@ services:
       APP_PATH: /app
       APP_PORT: 3000
       APP_ENV: production
-      CERT_PATH: /app/docker-configs/certs/nginx-selfsigned.crt
-      CERT_KEY_PATH: /app/docker-configs/certs/nginx-selfsigned.key
-      DH_PARAM_PATH: /app/docker-configs/certs/dhparam-2048.pem
+      CERTBOT_EMAIL: app@email.com
     ports:
       - 80:80
       - 443:443
