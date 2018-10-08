@@ -1,7 +1,5 @@
 FROM bmartel/ruby:2.6-rc-base
 
-ENV RAILS_ENV $RAILS_ENV
-
 WORKDIR $APP_PATH
 
 COPY Gemfile Gemfile.lock $APP_PATH/
