@@ -64,6 +64,8 @@ def set_application_config
     end
   RUBY
   end
+
+  environment "config.force_ssl = ENV['RAILS_FORCE_SSL'] || false"
 end
 
 def set_application_name
@@ -254,6 +256,7 @@ def add_docker
   directory "docker", force: true
   copy_file "Dockerfile"
   copy_file "docker-compose.yml"
+  copy_file "docker-compose.prod.yml"
   copy_file ".dockerignore", force: true
 end
 

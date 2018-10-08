@@ -17,7 +17,7 @@ services:
     build:
       context: .
     environment:
-      RAILS_ENV: development
+      RAILS_ENV: production
       RAILS_FORCE_SSL: 1
       PORT: 3000
       DB_HOST: postgres
@@ -25,16 +25,12 @@ services:
       REDIS_URL: redis://redis:6379
     ports:
       - "3000"
-      - "3035"
     links:
       - postgres
       - redis
     depends_on:
       - postgres
       - redis
-    volumes:
-      - .:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
   web:
     build:
       context: .
@@ -55,13 +51,13 @@ services:
     depends_on:
       - app
     volumes:
-      - ./public:/app/public
+      - app_data:/app/public
   worker:
     build:
       context: .
     command: bundle exec sidekiq
     environment:
-      RAILS_ENV: development
+      RAILS_ENV: production
       PORT: 3001
       DB_HOST: postgres
       DB_NAME: app
@@ -71,9 +67,7 @@ services:
       - redis
     depends_on:
       - app
-    volumes:
-      - .:/usr/src/app
 volumes:
-  node_modules:
+  app_data:
   postgres_data:
   redis_data:

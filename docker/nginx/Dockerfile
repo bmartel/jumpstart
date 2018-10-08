@@ -1,23 +1,26 @@
-FROM nginx
+FROM staticfloat/nginx-certbot
 
 RUN apt-get update -qq && apt-get -y install apache2-utils
 
-ARG APP_DOMAIN=www.example.com
-ARG APP_PORT=3000
-ARG APP_PATH=/app
-
-ENV APP_PATH $APP_PATH
-ENV APP_PORT $APP_PORT
-ENV APP_DOMAIN $APP_DOMAIN
+ENV APP_PATH /app
+ENV APP_PORT 3000
+ENV APP_DOMAIN app.local
+ENV APP_NAME app
+ENV CERT_PATH "/app/docker-configs/certs/nginx-selfsigned.crt"
+ENV CERT_KEY_PATH "/app/docker-configs/certs/nginx-selfsigned.key"
+ENV DH_PARAM_PATH "/app/docker-configs/certs/dhparam-2048.pem"
 
 WORKDIR $APP_PATH
 
-RUN mkdir $APP_PATH/log && touch $APP_PATH/log/nginx.access.log && touch $APP_PATH/log/nginx.error.log
-
 COPY public public/
 
-COPY docker/nginx/nginx.conf /tmp/docker.nginx
+COPY docker/nginx/nginx.conf docker/nginx/start.sh docker-configs/
+COPY docker/nginx/certs docker-configs/certs/
 
-RUN envsubst '$APP_PATH $APP_DOMAIN $APP_PORT' < /tmp/docker.nginx > /etc/nginx/conf.d/default.conf
+RUN chmod +x ./docker-configs/start.sh
+
 EXPOSE 80
-CMD [ "nginx", "-g", "daemon off;" ]
+EXPOSE 443
+
+CMD ["/bin/bash", "./docker-configs/start.sh"]
+
