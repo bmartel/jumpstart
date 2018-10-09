@@ -69,7 +69,6 @@ def set_application_config
 
   environment "config.force_ssl = true"
   environment "config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] + '/0' }",
-  environment "config.session_store :cache_store, key: \"_#{Rails.application.class.parent_name}_session\"",
 end
 
 def set_application_name
