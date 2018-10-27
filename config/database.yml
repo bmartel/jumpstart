@@ -8,12 +8,12 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["DB_HOST"] || 'app' %>_development
+  database: <%= ENV["DB_NAME"] || 'app' %>_development
 
 test:
   <<: *default
-  database: <%= ENV["DB_HOST"] || 'app' %>_test
+  database: <%= ENV["DB_NAME"] || 'app' %>_test
 
 production:
   <<: *default
-  database: <%= ENV["DB_HOST"] || 'app' %>_production
+  database: <%= ENV["DB_NAME"] || 'app' %>_production
