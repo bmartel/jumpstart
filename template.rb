@@ -26,25 +26,12 @@ def add_template_repository_to_source_path
 end
 
 def setup_gems
-  # gsub_file "Gemfile",
-  #   /gem \'sass-rails\'/,
-  #   "# gem 'sass-rails'"
-  # gsub_file "Gemfile",
-  #   /gem \'coffee-rails\'/,
-  #   "# gem 'coffee-rails'"
-  # gsub_file "Gemfile",
-  #   /gem \'uglifier\'/,
-  #   "# gem 'uglifier'"
-  # gsub_file "Gemfile",
-  #   /gem \'bootsnap\'/,
-  #   "# gem 'bootsnap'"
   gem 'redis'
   gem 'hiredis'
   gem 'pundit'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
-  # gem 'administrate', '~> 0.10.0'
   gem 'activeadmin'
   gem 'devise', '~> 4.4.3'
   gem 'devise_invitable', '~> 1.7.0'
