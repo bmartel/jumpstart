@@ -25,14 +25,27 @@ def add_template_repository_to_source_path
   end
 end
 
-def add_gems
+def setup_gems
+  # gsub_file "Gemfile",
+  #   /gem \'sass-rails\'/,
+  #   "# gem 'sass-rails'"
+  # gsub_file "Gemfile",
+  #   /gem \'coffee-rails\'/,
+  #   "# gem 'coffee-rails'"
+  # gsub_file "Gemfile",
+  #   /gem \'uglifier\'/,
+  #   "# gem 'uglifier'"
+  # gsub_file "Gemfile",
+  #   /gem \'bootsnap\'/,
+  #   "# gem 'bootsnap'"
   gem 'redis'
   gem 'hiredis'
   gem 'pundit'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
-  gem 'administrate', '~> 0.10.0'
+  # gem 'administrate', '~> 0.10.0'
+  gem 'activeadmin'
   gem 'devise', '~> 4.4.3'
   gem 'devise_invitable', '~> 1.7.0'
   gem 'devise_masquerade', '~> 0.6.0'
@@ -68,15 +81,12 @@ def set_application_config
   end
 
   environment "config.force_ssl = true"
-  environment "config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] + '/0' }",
+  environment "config.cache_store = :redis_cache_store, { url: \"\#{ENV['REDIS_URL']}/0\" }"
 end
 
 def set_application_name
   # Add Application Name to Config
   environment "config.application_name = Rails.application.class.parent_name"
-
-  # Announce the user where he can change the application name in the future.
-  puts "You can change application name inside: ./config/application.rb"
 end
 
 def setup_pg
@@ -117,17 +127,14 @@ def setup_headless_chrome
   end
 end
 
-def setup_pagy
-  generate "pagy:config"
-end
-
 def add_storage
   rails_command "active_storage:install"
 end
 
 def add_users
   # Install Devise
-  generate "devise:install"
+  add_active_admin
+  # generate "devise:install"
   generate "devise_invitable:install"
 
   # Install Pundit policies
@@ -138,7 +145,7 @@ def add_users
               env: 'development'
 
   # Create Devise User
-  generate :devise, "User"
+  # generate :devise, "User"
   generate :devise_invitable, "User"
 
   generate "migration devise_changes_to_users"
@@ -203,8 +210,9 @@ end
 
 def add_webpack
   rails_command 'webpacker:install'
-  environment "config.webpacker.check_yarn_integrity = false",
-            env: 'development'
+  gsub_file "config/environments/development.rb",
+    /config.webpacker.check_yarn_integrity = true/,
+    "config.webpacker.check_yarn_integrity = false"
 end
 
 def add_vuejs
@@ -255,14 +263,6 @@ def add_foreman
   copy_file "Procfile"
 end
 
-def add_docker
-  directory "docker", force: true
-  copy_file "Dockerfile"
-  copy_file "docker-compose.yml"
-  copy_file "docker-compose.prod.yml"
-  copy_file ".dockerignore", force: true
-end
-
 def add_announcements
   generate "model Announcement published_at:datetime announcement_type name description:text"
 end
@@ -271,18 +271,8 @@ def add_notifications
   generate "model Notification recipient_id:integer actor_id:integer read_at:datetime action:string notifiable_id:integer notifiable_type:string"
 end
 
-def add_administrate
-  generate "administrate:install"
-
-  gsub_file "app/dashboards/announcement_dashboard.rb",
-    /announcement_type: Field::String/,
-    "announcement_type: Field::Select.with_options(collection: Announcement::TYPES)"
-
-  gsub_file "app/controllers/admin/application_controller.rb",
-    /# TODO Add authentication logic here\./,
-    "redirect_to '/', alert: 'Not authorized.' unless user_signed_in? && current_user.admin?"
-
-  directory "dashboards", "app/dashboards", force: true
+def add_active_admin
+  generate "active_admin:install User"
 end
 
 def add_multiple_authentication
@@ -335,9 +325,7 @@ end
 # Main setup
 add_template_repository_to_source_path
 
-add_docker
-
-add_gems
+setup_gems
 
 after_bundle do
   set_application_config
@@ -346,7 +334,6 @@ after_bundle do
   setup_rspec
   setup_headless_chrome
   setup_pg
-  setup_pagy
   add_storage
   add_users
   add_sidekiq
@@ -367,14 +354,7 @@ after_bundle do
   rails_command "db:create"
   rails_command "db:migrate"
 
-  # Migrations must be done before this
-  add_administrate
-
   add_whenever
 
   add_sitemap
-
-  git :init
-  git add: "."
-  git commit: %Q{ -m 'Initial commit' }
 end
