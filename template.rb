@@ -309,6 +309,12 @@ def add_sitemap
   rails_command "sitemap:install"
 end
 
+def setup_git_repository
+  FileUtils.rm_rf(Dir['.git/*']) # clear the original
+  git :init
+  git add: "."
+end
+
 # Main setup
 add_template_repository_to_source_path
 
@@ -344,4 +350,5 @@ after_bundle do
   add_whenever
 
   add_sitemap
+  setup_git_repository
 end
