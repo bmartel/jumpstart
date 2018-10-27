@@ -129,7 +129,7 @@ let colors = {
 };
 
 // Theme colors
-colors['primary'] = colors['purple'];
+colors['primary'] = colors['teal'];
 colors['secondary'] = colors['grey-darker'];
 colors['accent'] = colors['green'];
 
