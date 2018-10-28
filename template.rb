@@ -218,6 +218,11 @@ def add_foreman
   copy_file "Procfile"
 end
 
+def add_gems
+  copy_file "Gemfile"
+  copy_file "Gemfile.lock"
+end
+
 def add_announcements
   generate "model Announcement published_at:datetime announcement_type name description:text"
 end
@@ -285,6 +290,7 @@ end
 
 # Main setup
 add_template_repository_to_source_path
+add_gems
 
 after_bundle do
   set_application_config
