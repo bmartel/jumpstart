@@ -260,7 +260,7 @@ def add_notifications
 end
 
 def add_active_admin
-  generate "active_admin:install"
+  generate "active_admin:install User"
   gsub_file "config/initializers/active_admin.rb",
     /config.current_user_method = :current_admin_user/,
     "config.current_user_method = :current_user"
@@ -270,6 +270,9 @@ def add_active_admin
   gsub_file "config/initializers/active_admin.rb",
     /# config.logout_link_method = :get/,
     "config.logout_link_method = :delete"
+  gsub_file "db/seeds.rb",
+    /User.create!\(/,
+    "User.create!(admin: true, "
 end
 
 def add_multiple_authentication
