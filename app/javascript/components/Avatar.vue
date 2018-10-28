@@ -2,9 +2,8 @@
   <span class="inline-flex">
     <img
       :src="url"
-      :class="styles"
-      :height="size"
-      :width="size"
+      :class="classes"
+      :style="styles"
       :alt="alt">
   </span>
 </template>
@@ -34,9 +33,15 @@ export default {
     },
   },
   computed: {
-    styles() {
+    classes() {
       return {
         [roundedLevels[this.rounded]]: true,
+      };
+    },
+    styles() {
+      return {
+        height: `${this.size}px`,
+        width: `${this.size}px`,
       };
     },
   },
