@@ -200,7 +200,7 @@ def add_jest
     "*.{js,vue}": [
       "npm run lint",
       "git add"
-    ]\
+    ]
   },
   "browserslist": [
     "last 2 versions",
