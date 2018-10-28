@@ -88,8 +88,7 @@ end
 
 def add_users
   # Install Devise
-  add_active_admin
-  # generate "devise:install"
+  generate "devise:install"
   generate "devise_invitable:install"
 
   # Install Pundit policies
@@ -103,6 +102,8 @@ def add_users
   generate :devise, "User"
   generate :devise_invitable, "User"
 
+  add_active_admin
+  
   generate "migration devise_changes_to_users"
 
   # Add additional user migrations
@@ -259,7 +260,7 @@ def add_notifications
 end
 
 def add_active_admin
-  generate "active_admin:install User"
+  generate "active_admin:install"
 end
 
 def add_multiple_authentication
