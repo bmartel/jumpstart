@@ -100,7 +100,7 @@ def add_users
               env: 'development'
 
   # Create Devise User
-  # generate :devise, "User"
+  generate :devise, "User"
   generate :devise_invitable, "User"
 
   generate "migration devise_changes_to_users"
@@ -219,8 +219,7 @@ def add_foreman
 end
 
 def add_gems
-  copy_file "Gemfile"
-  copy_file "Gemfile.lock"
+  copy_file "Gemfile", force: true
 end
 
 def add_announcements
