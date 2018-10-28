@@ -200,7 +200,7 @@ def add_jest
     "*.{js,vue}": [
       "npm run lint",
       "git add"
-    ]
+    ]\
   },
   "browserslist": [
     "last 2 versions",
@@ -277,6 +277,10 @@ def add_active_admin
   gsub_file "db/seeds.rb",
     /User.create!\(/,
     "User.create!(admin: true, "
+  user_migration = Dir["db/migrate/**/*add_devise_to_users.rb"].first
+  if user_migration
+    File.delete(user_migration)
+  end
 end
 
 def add_multiple_authentication
