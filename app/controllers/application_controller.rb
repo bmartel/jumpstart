@@ -6,7 +6,15 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :client_state
 
-  protected
+  protected    
+  
+    def authenticate_admin_user!
+      authenticate_user!
+      unless current_user.admin?
+        flash[:alert] = "Unauthorized Access!"
+        redirect_to root_path
+      end
+    end
 
     def layout_by_resource
       if devise_controller?
