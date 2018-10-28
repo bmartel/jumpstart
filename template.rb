@@ -219,7 +219,35 @@ def add_foreman
 end
 
 def add_gems
-  copy_file "Gemfile", force: true
+  gem 'redis'	
+  gem 'hiredis'	
+  gem 'pundit'	
+  gem 'enumerize'	
+  gem 'pagy'	
+  gem 'pg_search'	
+  gem 'activeadmin'	
+  gem 'devise', '~> 4.4.3'	
+  gem 'devise_invitable', '~> 1.7.0'	
+  gem 'devise_masquerade', '~> 0.6.0'	
+  gem 'gravtastic'	
+  gem 'mini_magick', '~> 4.8'	
+  gem 'webpacker', '~> 3.4'	
+  gem 'sidekiq', '~> 5.0'	
+  gem 'foreman', '~> 0.84.0'	
+  gem 'omniauth-google-oauth2', '~> 0.5.3'	
+  gem 'omniauth-facebook', '~> 4.0'	
+  gem 'omniauth-twitter', '~> 1.4'	
+  gem 'omniauth-github', '~> 1.3'	
+  gem 'whenever', require: false	
+  gem 'friendly_id', '~> 5.1.0'	
+  gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'	
+  gem_group :development, :test do	
+    gem 'rspec-rails'	
+    gem 'capybara'	
+    gem 'selenium-webdriver'	
+    gem 'factory_bot_rails'	
+    gem 'faker'	
+  end	
 end
 
 def add_announcements
