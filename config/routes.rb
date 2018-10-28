@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
+  ActiveAdmin.routes(self)
+
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   authenticate :user, lambda{ |u| u.admin? } do
@@ -15,14 +17,5 @@ Rails.application.routes.draw do
 
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
-
-  namespace :admin do
-    resources :announcements
-    resources :notifications
-    resources :services
-    resources :users
-
-    root to: "announcements#index"
-  end
 
 end
