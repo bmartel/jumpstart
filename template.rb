@@ -167,6 +167,8 @@ def copy_templates
   copy_file ".gitignore", force: true
   copy_file ".eslintignore", force: true
   copy_file ".editorconfig", force: true
+  run 'chmod +x docker/start.sh'
+  run 'chmod +x docker/nginx/start.sh'
 end
 
 def add_webpack
