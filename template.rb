@@ -261,6 +261,15 @@ end
 
 def add_active_admin
   generate "active_admin:install"
+  gsub_file "config/initializers/active_admin.rb",
+    /config.current_user_method = :current_admin_user/,
+    "config.current_user_method = :current_user"
+  gsub_file "config/initializers/active_admin.rb",
+    /config.logout_link_path = :destroy_admin_user_session_path/,
+    "config.logout_link_path = :destroy_user_session_path"
+  gsub_file "config/initializers/active_admin.rb",
+    /# config.logout_link_method = :get/,
+    "config.logout_link_method = :delete"
 end
 
 def add_multiple_authentication
