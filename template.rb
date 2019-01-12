@@ -235,9 +235,11 @@ def add_gems
   gem 'pg_search'
   # gem 'activeadmin'
   gem 'devise', '~> 4.4.3'
+  gem 'doorkeeper', '~> 5.0'
   gem 'devise_invitable', '~> 1.7.0'
   gem 'devise_masquerade', '~> 0.6.0'
   gem 'gravtastic'
+  gem 'active_model_serializers', '~> 0.10'
   gem 'mini_magick', '~> 4.8'
   gem 'webpacker', '~> 3.4'
   gem 'sidekiq', '~> 5.0'
@@ -281,6 +283,11 @@ def add_active_admin
   if user_migration
     File.delete(user_migration)
   end
+end
+
+def add_doorkeeper
+  generate "doorkeeper:install"
+  generate "doorkeeper:migration"
 end
 
 def add_multiple_authentication
@@ -349,6 +356,7 @@ after_bundle do
   setup_pg
   add_storage
   add_users
+  add_doorkeeper
   add_sidekiq
   add_foreman
   add_webpack
