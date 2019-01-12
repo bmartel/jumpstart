@@ -4,10 +4,12 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  ActiveAdmin.routes(self)
-
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
+  use_doorkeeper do
+    skip_controllers :applications, :authorized_applications
+  end
+  
   authenticate :user, lambda{ |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
