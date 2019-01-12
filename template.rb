@@ -102,7 +102,7 @@ def add_users
   generate :devise, "User"
   generate :devise_invitable, "User"
 
-  add_active_admin
+  # add_active_admin
 
   generate "migration devise_changes_to_users"
 
@@ -233,7 +233,7 @@ def add_gems
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
-  gem 'activeadmin'
+  # gem 'activeadmin'
   gem 'devise', '~> 4.4.3'
   gem 'devise_invitable', '~> 1.7.0'
   gem 'devise_masquerade', '~> 0.6.0'
