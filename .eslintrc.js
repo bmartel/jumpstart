@@ -11,13 +11,12 @@ module.exports = {
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
     // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential',
-    'eslint:recommended',
-    require.resolve('eslint-config-prettier'),
-    require.resolve('eslint-config-prettier/vue')
+    'plugin:vue/recommended',
+    'plugin:prettier/recommended'
   ],
   // required to lint *.vue files
   plugins: [
+    'vue',
     'prettier'
   ],
   // add your custom rules here
@@ -27,10 +26,10 @@ module.exports = {
     // allow console/debugger during development
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-     // require single quotes
+     // require single quotes, without 
     'quotes': [2, 'single'],
      // enable prettier
-    'prettier/prettier': 'warn',
+    'prettier/prettier': 'error',
   },
   globals: {
     'requestAnimationFrame': true,
