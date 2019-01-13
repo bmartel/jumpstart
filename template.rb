@@ -184,7 +184,7 @@ end
 
 def add_npm_packages
   run 'yarn add rails-ujs turbolinks activestorage actioncable tailwindcss glhd-tailwindcss-transitions vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios babel-polyfill lodash date-fns feather-icons'
-  run 'yarn add --dev babel-preset-es2015@^6.24.1 eslint@^5.8.0 babel-eslint@^10.0.1 jest@^23.6.0 babel-jest@^23.6.0 vue-jest@^3.0.2 jest-serializer-vue^2.0.2 @vue/test-utils prettier@^1.15.3 eslint-loader@^2.1.1 eslint-config-prettier@^3.3.0 eslint-plugin-import@^2.14.0 eslint-plugin-node@^8.0.1 eslint-plugin-prettier@^3.0.1 eslint-plugin-promise@^4.0.1 eslint-plugin-vue@^5.1.0 purgecss-webpack-plugin@0.23.0 husky lint-staged'
+  run 'yarn add --dev babel-preset-es2015@^6.24.1 eslint@^5.8.0 babel-eslint@^10.0.1 jest@^23.6.0 babel-jest@^23.6.0 vue-jest@^3.0.2 jest-serializer-vue@^2.0.2 @vue/test-utils prettier@^1.15.3 eslint-loader@^2.1.1 eslint-config-prettier@^3.3.0 eslint-plugin-import@^2.14.0 eslint-plugin-node@^8.0.1 eslint-plugin-prettier@^3.0.1 eslint-plugin-promise@^4.0.1 eslint-plugin-vue@^5.1.0 purgecss-webpack-plugin@0.23.0 husky lint-staged'
 end
 
 def add_jest
