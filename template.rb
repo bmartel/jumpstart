@@ -194,13 +194,17 @@ def add_jest
     "unit": "jest --config spec/javascript/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --fix --ext .js,.vue app/javascript spec/javascript",
-    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,vue}": [
       "npm run lint",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "browserslist": [
     "last 2 versions",
