@@ -193,7 +193,7 @@ def add_jest
   "scripts": {
     "unit": "jest --config spec/javascript/jest.conf.js --coverage",
     "test": "npm run unit",
-    "lint": "eslint --fix --ext .js,.vue app/javascript spec/javascript",
+    "lint": "eslint --fix --ext .js,.vue app/javascript spec/javascript"
   },
   "lint-staged": {
     "*.{js,vue}": [
