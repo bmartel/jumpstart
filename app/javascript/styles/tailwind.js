@@ -117,7 +117,7 @@ const colors = {
 };
 
 colors['primary'] = colors['teal']['400'];
-colors['secondary'] = colors['grey']['700'];
+colors['secondary'] = colors['gray']['700'];
 colors['accent'] = colors['green']['400'];
 colors['success'] = colors['green']['400'];
 colors['info'] = colors['blue']['400'];

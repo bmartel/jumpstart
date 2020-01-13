@@ -166,6 +166,7 @@ def copy_templates
   copy_file ".dockerignore", force: true
   copy_file "babel.config.js", force: true
   copy_file ".eslintrc.js", force: true
+  copy_file ".browserslistrc", force: true
   copy_file ".prettierrc", force: true
   copy_file ".gitignore", force: true
   copy_file ".eslintignore", force: true
@@ -207,10 +208,6 @@ def add_jest
       "git add"
     ]
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
   RUBY
   end
 end

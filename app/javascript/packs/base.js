@@ -1,6 +1,7 @@
-import Rails from 'rails-ujs';
-// import Turbolinks from 'turbolinks';
-// import TurbolinksAdapter from 'vue-turbolinks';
+import Rails from '@rails/ujs';
+import ActiveStorage from '@rails/activestorage';
+import Turbolinks from 'turbolinks';
+import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue';
 import '@/directives/action';
 import store, { hydrate } from '@/store';
@@ -13,10 +14,9 @@ hydrate(store, window.__INITIAL_STATE__);
 
 // Register any other modules
 
-// Vue.use(TurbolinksAdapter);
+Vue.use(TurbolinksAdapter);
 
-// document.addEventListener('turbolinks:load', () => {
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '#app',
     store,
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Start Rails Turbolinks
+// Start Rails Turbolinks and ActiveStorage
 Rails.start();
-// Turbolinks.start();
+Turbolinks.start();
+ActiveStorage.start();
