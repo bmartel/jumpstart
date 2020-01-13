@@ -33,7 +33,7 @@ export default {
     },
     position: {
       type: String,
-      default: 'pin-t pin-r',
+      default: 'top-0 right-0',
     },
     menuStyle: {
       type: String,

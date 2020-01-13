@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title><%= Rails.configuration.application_name %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <%= stylesheet_pack_tag 'application', media: 'all'  %>
+    <%= csrf_meta_tags %>
+    <%= yield :meta %>
+    <%= stylesheet_pack_tag 'application', media: 'all' %>
+    <%= yield :css %>
   </head>
 
   <body class="font-sans">
@@ -16,7 +20,7 @@
         window.__INITIAL_STATE__ = <%= raw @state.to_json %>;
       </script>
     <% end %>
-
     <%= javascript_pack_tag 'application' %>
+    <%= yield :js %>
   </body>
 </html>

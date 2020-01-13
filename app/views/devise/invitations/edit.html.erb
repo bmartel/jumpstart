@@ -1,7 +1,7 @@
 
 <h2 class="text-center mt-4"><%= t 'devise.invitations.edit.header' %></h2>
 
-<div class="flex flex-col sm:max-w-lg sm:p-6 sm:mx-auto sm:mt-2 md:mt-4">
+<div class="flex flex-col sm:max-w-2xl sm:p-6 sm:mx-auto sm:mt-2 md:mt-4">
 
   <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
     <%= devise_error_messages! %>

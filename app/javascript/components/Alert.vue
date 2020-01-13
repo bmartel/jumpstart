@@ -1,10 +1,10 @@
 <template>
-  <div class="z-20 fixed pin-t pin-x">
+  <div class="z-20 fixed top-0 inset-x-0">
     <div
       v-for="(message, index) in messages"
       :key="index"
       :class="styles(message)"
-      class="text-white py-3">
+      class="text-white py-4">
       <div class="flex items-center justify-center container px-2 md:px-0 mx-auto">
         <button
           class="text-white px-2 mr-2 mt-1 hover:opacity-50"

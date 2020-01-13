@@ -7,7 +7,7 @@
 
     <%= csrf_meta_tags %>
     <%= yield :meta %>
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all' %>
     <%= yield :css %>
 
     <% if @state %>
@@ -16,7 +16,7 @@
       </script>
     <% end %>
 
-    <%= javascript_pack_tag 'base', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'base' %>
     <%= yield :js %>
   </head>
 

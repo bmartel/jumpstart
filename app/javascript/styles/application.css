@@ -1,8 +1,7 @@
-@import "tailwindcss/base";
+@tailwind base;
 
-@import "tailwindcss/components";
+@tailwind components;
 
-3 
 .brand {
   @apply .inline-flex .no-underline .text-lg .text-white .items-center;
   min-height: 32px;
@@ -12,4 +11,5 @@
   min-height: 50px;
 }
 
-@import "tailwindcss/utilities";
+@tailwind utilities;
+

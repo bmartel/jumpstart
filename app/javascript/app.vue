@@ -5,7 +5,8 @@
       :messages="alerts" />
     <navbar
       :user="currentUser"
-      class="bg-primary">
+      class="bg-primary"
+    >
       <router-link
         v-if="spa"
         slot="brand"

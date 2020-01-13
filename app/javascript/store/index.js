@@ -11,8 +11,10 @@ import { setCsrfToken } from '@/utils/axios';
 
 Vue.use(Vuex);
 
-export const hydrate = (store, data) => {
-  if (data) {
+export const hydrate = (store, dataKey = '__INITIAL_STATE__') => {
+  if (typeof window === 'object' && dataKey in window) {
+    const data = window[dataKey];
+    delete window[dataKey];
     setCsrfToken(data);
     const storeState = store.state;
     store.replaceState({ ...storeState, ...data });
