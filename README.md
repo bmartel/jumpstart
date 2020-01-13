@@ -3,7 +3,7 @@
 Rails apps should start off with a bunch of great defaults and a fully
 configured VueJS development setup including testing.
 
-**Note:** Requires Rails ~6.0 and Docker
+**Note:** Docker
 
 ## Getting Started
 
