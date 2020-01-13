@@ -187,7 +187,7 @@ def add_vuejs
 end
 
 def add_npm_packages
-  run 'yarn add rails-ujs turbolinks activestorage actioncable tailwindcss vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios core-js register-service-worker lodash date-fns feather-icons'
+  run 'yarn add turbolinks tailwindcss vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios core-js register-service-worker lodash date-fns feather-icons'
   run 'yarn add --dev @vue/cli-service @vue/cli-plugin-babel @vue/cli-plugin-eslint @vue/cli-plugin-unit-jest @vue/test-utils eslint babel-eslint prettier eslint-plugin-vue eslint-plugin-prettier purgecss-webpack-plugin sass sass-loader vue-template-compiler'
 end
 
@@ -206,7 +206,7 @@ def add_jest
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions"
