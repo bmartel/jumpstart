@@ -1,7 +1,8 @@
 class Service < ApplicationRecord
+  self.implicit_order_column = "created_at"
   belongs_to :user
 
-  %w{ google facebook twitter github }.each do |provider|
+  Devise.omniauth_configs.keys.each do |provider|
     scope provider, ->{ where(provider: provider) }
   end
 

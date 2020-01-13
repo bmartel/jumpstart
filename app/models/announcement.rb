@@ -1,4 +1,5 @@
 class Announcement < ApplicationRecord
+  self.implicit_order_column = "created_at"
   TYPES = %w{ new fix update }
 
   after_initialize :set_defaults

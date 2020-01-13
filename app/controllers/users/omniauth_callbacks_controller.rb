@@ -74,8 +74,9 @@ module Users
 
     def create_user
       user = User.create(
-        email: auth.info.email,
-        #name: auth.info.name,
+        email: auth.info.email || "#{auth.uid}@#{auth.provider}.generated",
+        display_name: auth.info.display_name || auth.info.name,
+        avatar_url: auth.info.avatar || auth.try(:extra).try(:raw_info).try(:user).try(:avatar),
         password: Devise.friendly_token[0,20]
       )
       user.confirm

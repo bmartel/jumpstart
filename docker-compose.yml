@@ -1,81 +1,35 @@
-version: '3'
+version: '3.6'
 
 services:
   postgres:
-    image: postgres:10-alpine
+    image: postgres:12-alpine
     ports:
       - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
   redis:
-    image: redis:4-alpine
+    image: redis:5-alpine
     ports:
       - "6379"
     volumes:
       - redis_data:/data
+    restart: unless-stopped
 
-  app:
-    build:
-      context: .
-    environment:
-      RAILS_ENV: development
-      PORT: 3000
-      DB_HOST: postgres
-      DB_NAME: app
-      REDIS_URL: redis://redis:6379
+  minio:
+    image: minio/minio
+    command: server /data
+    volumes:
+      - minio_data:/data
     ports:
-      - "3000"
-      - "3035"
-    links:
-      - postgres
-      - redis
-    depends_on:
-      - postgres
-      - redis
-    volumes:
-      - .:/usr/src/app
-
-  web:
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
+      - 9000:9000
     environment:
-      APP_NAME: app
-      APP_DOMAIN: app.local
-      APP_PATH: /app
-      APP_PORT: 3000
-      APP_ENV: development
-      CERT_PATH: /app/docker-configs/certs/nginx-selfsigned.crt
-      CERT_KEY_PATH: /app/docker-configs/certs/nginx-selfsigned.key
-      DH_PARAM_PATH: /app/docker-configs/certs/dhparam-2048.pem
-    ports:
-      - 80:80
-      - 443:443
-    links:
-      - app
-    depends_on:
-      - app
-    volumes:
-      - ./public:/app/public
-
-  worker:
-    build:
-      context: .
-    command: bundle exec sidekiq
-    environment:
-      RAILS_ENV: development
-      PORT: 3001
-      DB_HOST: postgres
-      DB_NAME: app
-      REDIS_URL: redis://redis:6379
-    links:
-      - postgres
-      - redis
-    depends_on:
-      - app
-    volumes:
-      - .:/usr/src/app
+      MINIO_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${AWS_SECRET_KEY} 
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
+  minio_data:

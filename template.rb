@@ -29,6 +29,7 @@ def set_application_config
   application do
   <<-'RUBY'
     config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
       g.stylesheets false
       g.javascripts false
     end
@@ -36,12 +37,13 @@ def set_application_config
   end
 
   environment "config.force_ssl = true"
+  environment "config.active_storage.variant_processor = :vips"
   environment "config.cache_store = :redis_cache_store, { url: \"\#{ENV['REDIS_URL']}/0\" }"
 end
 
 def set_application_name
   # Add Application Name to Config
-  environment "config.application_name = Rails.application.class.parent_name"
+  environment "config.application_name = Rails.application.class.module_parent_name"
 end
 
 def setup_pg
@@ -84,6 +86,12 @@ end
 
 def add_storage
   rails_command "active_storage:install"
+
+  environment "config.active_storage.service = :amazon",
+              env: 'development'
+
+  environment "config.active_storage.service = :amazon",
+              env: 'production'
 end
 
 def add_users
@@ -110,7 +118,8 @@ def add_users
   devise_changes = Dir["db/migrate/**/*devise_changes_to_users.rb"].first
   insert_into_file devise_changes, after: "  def change\n" do
     <<-'RUBY'
-    add_column :users, :name, :string, null: false, default: ""
+    add_column :users, :display_name, :string
+    add_column :users, :avatar_url, :string
 
     ## Confirmable
     add_column :users, :confirmation_token, :string
@@ -129,19 +138,12 @@ def add_users
     ## Admin
     add_column :users, :admin, :boolean, default: false
 
-    ## Remove Trackable
-    remove_column :users, :sign_in_count
-    remove_column :users, :current_sign_in_at
-    remove_column :users, :last_sign_in_at
-    remove_column :users, :current_sign_in_ip
-    remove_column :users, :last_sign_in_ip
-
     add_index :users, :confirmation_token,   unique: true
     add_index :users, :unlock_token,         unique: true
     RUBY
   end
 
-  requirement = Gem::Requirement.new("> 5.2")
+  requirement = Gem::Requirement.new("> 6.0")
   rails_version = Gem::Version.new(Rails::VERSION::STRING)
 
   if requirement.satisfied_by? rails_version
@@ -159,14 +161,16 @@ def copy_templates
   directory "docker", force: true
   copy_file "Dockerfile", force: true
   copy_file "docker-compose.yml", force: true
+  copy_file "docker-compose.dev.yml", force: true
   copy_file "docker-compose.prod.yml", force: true
   copy_file ".dockerignore", force: true
-  copy_file ".babelrc", force: true
+  copy_file "babel.config.js", force: true
   copy_file ".eslintrc.js", force: true
   copy_file ".prettierrc", force: true
   copy_file ".gitignore", force: true
   copy_file ".eslintignore", force: true
   copy_file ".editorconfig", force: true
+  copy_file ".env", force: true
   run 'chmod +x docker/start.sh'
   run 'chmod +x docker/nginx/start.sh'
 end
@@ -183,43 +187,32 @@ def add_vuejs
 end
 
 def add_npm_packages
-  run 'yarn add rails-ujs turbolinks activestorage actioncable tailwindcss glhd-tailwindcss-transitions vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios babel-polyfill lodash date-fns feather-icons'
-  run 'yarn add --dev babel-preset-es2015 jest babel-jest vue-jest jest-serializer-vue @vue/test-utils eslint babel-eslint prettier eslint-loader eslint-config-prettier eslint-plugin-vue eslint-plugin-prettier eslint-plugin-import eslint-plugin-node eslint-plugin-promise purgecss-webpack-plugin husky lint-staged'
+  run 'yarn add rails-ujs turbolinks activestorage actioncable tailwindcss vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios core-js register-service-worker lodash date-fns feather-icons'
+  run 'yarn add --dev @vue/cli-service @vue/cli-plugin-babel @vue/cli-plugin-eslint @vue/cli-plugin-unit-jest @vue/test-utils eslint babel-eslint prettier eslint-plugin-vue eslint-plugin-prettier purgecss-webpack-plugin sass sass-loader vue-template-compiler'
 end
 
 def add_jest
   insert_into_file "package.json", after: "  \"private\": true,\n" do
   <<-'RUBY'
   "scripts": {
-    "unit": "jest --config spec/javascript/jest.conf.js --coverage",
-    "test": "npm run unit",
-    "lint": "eslint --fix --ext .js,.vue app/javascript spec/javascript"
+    "test": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,vue}": [
-      "npm run lint",
+      "vue-cli-service lint",
       "git add"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
+  }
   "browserslist": [
-    "last 2 versions",
     "> 1%",
-    "not ie <= 10"
+    "last 2 versions"
   ],
   RUBY
   end
-end
-
-def add_tailwind
-  run './node_modules/.bin/tailwind init app/javascript/styles/tailwind.js'
-  insert_into_file ".postcssrc.yml",
-    "  tailwindcss: './app/javascript/styles/tailwind.js'",
-    after: "postcss-cssnext: {}\n"
 end
 
 def add_sidekiq
@@ -232,29 +225,28 @@ end
 
 def add_gems
   gem 'redis'
-  gem 'hiredis'
+  gem 'image_processing'
+  gem "aws-sdk-s3", require: false
   gem 'pundit'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
-  # gem 'activeadmin'
-  gem 'devise', '~> 4.4.3'
-  gem 'doorkeeper', '~> 5.0'
-  gem 'devise_invitable', '~> 1.7.0'
-  gem 'devise_masquerade', '~> 0.6.0'
+  gem 'devise'
+  gem 'doorkeeper'
+  gem 'devise_invitable'
+  gem 'devise_masquerade'
   gem 'gravtastic'
-  gem 'active_model_serializers', '~> 0.10'
-  gem 'mini_magick', '~> 4.8'
-  gem 'webpacker', '~> 3.4'
-  gem 'sidekiq', '~> 5.0'
-  gem 'foreman', '~> 0.84.0'
-  gem 'omniauth-google-oauth2', '~> 0.5.3'
-  gem 'omniauth-facebook', '~> 4.0'
-  gem 'omniauth-twitter', '~> 1.4'
-  gem 'omniauth-github', '~> 1.3'
+  gem 'active_model_serializers'
+  gem 'webpacker'
+  gem 'sidekiq'
+  gem 'foreman'
+  gem 'omniauth-google-oauth2'
+  gem 'omniauth-facebook'
+  gem 'omniauth-twitter'
+  gem 'omniauth-github'
   gem 'whenever', require: false
-  gem 'friendly_id', '~> 5.1.0'
-  gem 'sitemap_generator', '~> 6.0', '>= 6.0.1'
+  gem 'friendly_id'
+  gem 'sitemap_generator'
   gem_group :development, :test do
     gem 'rspec-rails'
     gem 'capybara'
@@ -296,22 +288,23 @@ end
 
 def add_multiple_authentication
     generate "model Service user:references provider uid access_token access_token_secret refresh_token expires_at:datetime auth:text"
+    generate "model UserPreference user:references:unique data:jsonb"
 
     template = """
-  if Rails.application.secrets.google_app_id.present? && Rails.application.secrets.google_app_secret.present?
-    config.omniauth :google, Rails.application.secrets.google_app_id, Rails.application.secrets.google_app_secret
+  if Rails.application.credentials.google_app_id.present? && Rails.application.credentials.google_app_secret.present?
+    config.omniauth :google, Rails.application.credentials.google_app_id, Rails.application.credentials.google_app_secret
   end
 
-  if Rails.application.secrets.facebook_app_id.present? && Rails.application.secrets.facebook_app_secret.present?
-    config.omniauth :facebook, Rails.application.secrets.facebook_app_id, Rails.application.secrets.facebook_app_secret, scope: 'email,user_posts'
+  if Rails.application.credentials.facebook_app_id.present? && Rails.application.credentials.facebook_app_secret.present?
+    config.omniauth :facebook, Rails.application.credentials.facebook_app_id, Rails.application.credentials.facebook_app_secret, scope: 'email,user_posts'
   end
 
-  if Rails.application.secrets.twitter_app_id.present? && Rails.application.secrets.twitter_app_secret.present?
-    config.omniauth :twitter, Rails.application.secrets.twitter_app_id, Rails.application.secrets.twitter_app_secret
+  if Rails.application.credentials.twitter_app_id.present? && Rails.application.credentials.twitter_app_secret.present?
+    config.omniauth :twitter, Rails.application.credentials.twitter_app_id, Rails.application.credentials.twitter_app_secret
   end
 
-  if Rails.application.secrets.github_app_id.present? && Rails.application.secrets.github_app_secret.present?
-    config.omniauth :github, Rails.application.secrets.github_app_id, Rails.application.secrets.github_app_secret
+  if Rails.application.credentials.github_app_id.present? && Rails.application.credentials.github_app_secret.present?
+    config.omniauth :github, Rails.application.credentials.github_app_id, Rails.application.credentials.github_app_secret
   end
     """.strip
 
@@ -328,7 +321,7 @@ def add_friendly_id
 
   insert_into_file(
     Dir["db/migrate/**/*friendly_id_slugs.rb"].first,
-    "[5.2]",
+    "[6.0]",
     after: "ActiveRecord::Migration"
   )
 end
@@ -366,7 +359,6 @@ after_bundle do
   add_webpack
   add_vuejs
   add_npm_packages
-  add_tailwind
   add_jest
   add_announcements
   add_notifications
@@ -375,12 +367,7 @@ after_bundle do
 
   copy_templates
 
-  # Migrate
-  rails_command "db:create"
-  rails_command "db:migrate"
-
   add_whenever
 
   add_sitemap
-  setup_git_repository
 end

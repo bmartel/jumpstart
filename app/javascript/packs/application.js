@@ -1,12 +1,12 @@
-import 'babel-polyfill';
-
 import Vue from 'vue';
-import Vuex from 'vuex';
+import "../utils/registerServiceWorker";
 import { sync } from 'vuex-router-sync';
 import store, { hydrate } from '@/store';
 import router from '@/routes';
 import App from '@/app';
 import '@/styles/application.css';
+
+Vue.config.productionTip = false;
 
 // Hydrate store data from Rails
 hydrate(store, window.__INITIAL_STATE__);
