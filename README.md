@@ -24,13 +24,13 @@ docker run --rm -v `pwd`:`pwd` -w `pwd` -u $(id -u ${USER}):$(id -g ${USER}) bma
 
 ```bash
 cd myapp
-docker-compose up -f docker-compose.dev.yml up -d
+docker-compose up -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 #### Cleaning up
 
 ```bash
-docker-compose up -f docker-compose.dev.yml down -v
+docker-compose up -f docker-compose.yml -f docker-compose.dev.yml down -v
 cd ..
 rm -rf myapp
 ```
