@@ -37,6 +37,7 @@ def set_application_config
   end
 
   environment "config.force_ssl = true"
+  environment "config.hosts << \"#{ENV['APP_DOMAIN']}\""
   environment "config.active_storage.variant_processor = :vips"
   environment "config.cache_store = :redis_cache_store, { url: \"\#{ENV['REDIS_URL']}/0\" }"
 end
