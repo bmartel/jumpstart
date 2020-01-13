@@ -155,7 +155,9 @@ def add_users
 end
 
 def copy_templates
+  FileUtils.rm_rf(Dir['.db/*']) # clear the generated db dir
   directory "app", force: true
+  directory "db", force: true
   directory "config", force: true
   directory "lib", force: true
   directory "spec", force: true
