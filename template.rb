@@ -370,4 +370,6 @@ after_bundle do
   add_whenever
 
   add_sitemap
+
+  setup_git_repository
 end
