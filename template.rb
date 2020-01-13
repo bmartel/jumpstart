@@ -168,6 +168,7 @@ def copy_templates
   copy_file "docker-compose.prod.yml", force: true
   copy_file ".dockerignore", force: true
   copy_file "babel.config.js", force: true
+  copy_file "postcss.config.js", force: true
   copy_file ".eslintrc.js", force: true
   copy_file ".browserslistrc", force: true
   copy_file ".prettierrc", force: true
