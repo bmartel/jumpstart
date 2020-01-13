@@ -10,6 +10,7 @@ services:
       PORT: ${APP_PORT}
       DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
       REDIS_URL: ${REDIS_URL}
     ports:
       - ${APP_PORT}
@@ -48,6 +49,7 @@ services:
       PORT: 3001
       DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
       REDIS_URL: ${REDIS_URL}
     depends_on:
       - app
