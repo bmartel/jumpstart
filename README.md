@@ -1,9 +1,9 @@
 # Rails Vine
 
 Rails apps should start off with a bunch of great defaults and a fully
-configured VueJS development setup including testing.
+configured VueJS development setup including testing, with docker.
 
-**Note:** Docker
+**Note:** Requires Docker and Docker Compose
 
 ## Getting Started
 
