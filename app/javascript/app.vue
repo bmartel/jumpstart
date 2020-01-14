@@ -32,7 +32,7 @@
         class="list-reset flex">
         <li
           :class="{'border-white opacity-100': currentUrl(announcementsUrl)}"
-          class="mr-6 py-1 border-transparent border-b-2 opacity-50 hover:opacity-100 hover:border-white transition inline-flex items-center"><a
+          class="mr-6 py-1 border-transparent border-b-2 hover:border-white transition inline-flex items-center"><a
             :href="announcementsUrl"
             class="text-white no-underline font-thin inline-flex items-center">
             <span class="hidden md:inline-flex">Announcements</span>
@@ -43,7 +43,7 @@
         </a></li>
         <li
           :class="{'border-white opacity-100': currentUrl(notificationsUrl)}"
-          class="mr-6 py-1 border-transparent border-b-2 opacity-50 hover:opacity-100 hover:border-white transition inline-flex items-center"><a
+          class="mr-6 py-1 border-transparent border-b-2 hover:border-white transition inline-flex items-center"><a
             :href="notificationsUrl"
             class="text-white no-underline font-thin">
             <span class="hidden md:inline-flex">Notifications</span>

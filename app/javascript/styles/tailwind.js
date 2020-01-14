@@ -13,5 +13,9 @@ module.exports = {
         error: defaultTheme.colors.red['400'],
       },
     },
-  }
+  },
+  variants: {
+    textColor: ['responsive', 'hover', 'focus', 'group-hover'],
+  },
 };
+
