@@ -1,13 +1,26 @@
 class ApplicationController < ActionController::Base
+  include Pundit
   protect_from_forgery with: :exception, prepend: true
 
   layout :layout_by_resource
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :client_state
+  before_action :client_state, unless: :active_admin_controller?
+  after_action :verify_authorized, except: :index, if: :app_controller?
+  after_action :verify_policy_scoped, only: :index, if: :app_controller?
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protected    
   
+    def active_admin_controller?
+      is_a?(ActiveAdmin::BaseController)
+    end
+
+    def app_controller?
+      !(devise_controller? || active_admin_controller?)
+    end
+
     def authenticate_admin_user!
       authenticate_user!
       unless current_user.admin?
@@ -16,11 +29,19 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def user_not_authorized(exception)
+      message = exception.reason ? "pundit.errors.#{e.reason}" : exception.policy ? "#{exception.policy.class.to_s.underscore}.#{exception.query}" : e.message
+
+      flash[:alert] = I18n.t(message, scope: "pundit", default: :default)
+
+      redirect_to(request.referrer || root_path)
+    end
+
     def layout_by_resource
-      if devise_controller?
-        "base"
-      else
+      if app_controller?
         "application"
+      else
+        "base"
       end
     end
 

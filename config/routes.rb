@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  ActiveAdmin.routes(self)
+
   resources :announcements, only: [:index]
   resources :notifications, only: [:index]
 

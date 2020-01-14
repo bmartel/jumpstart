@@ -111,7 +111,7 @@ def add_users
   generate :devise, "User"
   generate :devise_invitable, "User"
 
-  # add_active_admin
+  add_active_admin
 
   generate "migration devise_changes_to_users"
 
@@ -225,26 +225,27 @@ def add_foreman
 end
 
 def add_gems
-  gem 'redis'
-  gem 'image_processing'
-  gem "aws-sdk-s3", require: false
-  gem 'pundit'
+  gem 'activeadmin'
+  gem 'active_model_serializers'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
+  gem 'pundit'
   gem 'devise'
   gem 'doorkeeper'
   gem 'devise_invitable'
   gem 'devise_masquerade'
-  gem 'gravtastic'
-  gem 'active_model_serializers'
-  gem 'webpacker'
-  gem 'sidekiq'
-  gem 'foreman'
   gem 'omniauth-google-oauth2'
   gem 'omniauth-facebook'
   gem 'omniauth-twitter'
   gem 'omniauth-github'
+  gem 'gravtastic'
+  gem 'webpacker'
+  gem 'sidekiq'
+  gem 'foreman'
+  gem 'redis'
+  gem 'image_processing'
+  gem "aws-sdk-s3", require: false
   gem 'whenever', require: false
   gem 'friendly_id'
   gem 'sitemap_generator'
@@ -267,19 +268,26 @@ end
 
 def add_active_admin
   generate "active_admin:install User"
+
   gsub_file "config/initializers/active_admin.rb",
     /config.authentication_method = :authenticate_user!/,
     "config.authentication_method = :authenticate_admin_user!"
+
   gsub_file "config/initializers/active_admin.rb",
     /# config.logout_link_method = :get/,
     "config.logout_link_method = :delete"
+
+  insert_into_file "config/initializers/active_admin.rb", after: "  # config.authorization_adapter = ActiveAdmin::CanCanAdapter\n" do
+  <<-'RUBY'
+    config.authorization_adapter = ActiveAdmin::PunditAdapter
+    config.pundit_default_policy = "Admin::AdminPolicy"
+    config.on_unauthorized_access = :user_not_authorized
+  RUBY
+  end
+
   gsub_file "db/seeds.rb",
     /User.create!\(/,
     "User.create!(admin: true, "
-  user_migration = Dir["db/migrate/**/*add_devise_to_users.rb"].first
-  if user_migration
-    File.delete(user_migration)
-  end
 end
 
 def add_doorkeeper
