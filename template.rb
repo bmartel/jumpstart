@@ -97,65 +97,12 @@ end
 
 def add_passwordless
   generate "passwordless:install:migrations"
-end
-
-def add_users
-  # Install Devise
-  # generate "devise:install"
-  # generate "devise_invitable:install"
-
   # Install Pundit policies
   generate "pundit:install"
 
-  # Configure Devise
+  # Configure Dev Mailer
   environment "config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }",
               env: 'development'
-
-  # Create Devise User
-  generate :devise, "User"
-  generate :devise_invitable, "User"
-
-  add_active_admin
-
-  generate "migration devise_changes_to_users"
-
-  # Add additional user migrations
-  devise_changes = Dir["db/migrate/**/*devise_changes_to_users.rb"].first
-  insert_into_file devise_changes, after: "  def change\n" do
-    <<-'RUBY'
-    add_column :users, :display_name, :string
-    add_column :users, :avatar_url, :string
-
-    ## Confirmable
-    add_column :users, :confirmation_token, :string
-    add_column :users, :confirmed_at, :datetime
-    add_column :users, :confirmation_sent_at, :datetime
-    add_column :users, :unconfirmed_email, :string
-
-    ## Lockable
-    add_column :users, :failed_attempts, :integer, default: 0, null: false
-    add_column :users, :unlock_token, :string
-    add_column :users, :locked_at, :datetime
-
-    ## Announcements
-    add_column :users, :announcements_last_read_at, :datetime
-
-    ## Admin
-    add_column :users, :admin, :boolean, default: false
-
-    add_index :users, :confirmation_token,   unique: true
-    add_index :users, :unlock_token,         unique: true
-    RUBY
-  end
-
-  requirement = Gem::Requirement.new("> 6.0")
-  rails_version = Gem::Version.new(Rails::VERSION::STRING)
-
-  if requirement.satisfied_by? rails_version
-    gsub_file "config/initializers/devise.rb",
-      /  # config.secret_key = .+/,
-      "  config.secret_key = Rails.application.credentials.secret_key_base"
-  end
 end
 
 def copy_templates
@@ -164,14 +111,12 @@ def copy_templates
   directory "db", force: true
   directory "config", force: true
   directory "lib", force: true
-  # directory "spec", force: true
   directory "docker", force: true
   copy_file "Dockerfile", force: true
   copy_file "docker-compose.yml", force: true
   copy_file "docker-compose.dev.yml", force: true
   copy_file "docker-compose.prod.yml", force: true
   copy_file ".dockerignore", force: true
-  # copy_file "babel.config.js", force: true
   copy_file "postcss.config.js", force: true
   copy_file ".eslintrc.js", force: true
   copy_file ".browserslistrc", force: true
@@ -191,33 +136,13 @@ def add_webpack
     "config.webpacker.check_yarn_integrity = false"
 end
 
-def add_vuejs
-  rails_command 'webpacker:install:vue'
+def add_stimulus
+  rails_command 'webpacker:install:stimulus'
+  rails_command 'stimulus_reflex:install'
 end
 
 def add_npm_packages
-  # run 'yarn add turbolinks tailwindcss vuex vue-router vuex-router-sync vue-meta vue-turbolinks axios core-js register-service-worker lodash date-fns feather-icons'
   run 'yarn add --dev purgecss-webpack-plugin'
-end
-
-def add_jest
-  insert_into_file "package.json", after: "  \"private\": true,\n" do
-  <<-'RUBY'
-  "scripts": {
-    "test": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  },
-  RUBY
-  end
 end
 
 def add_sidekiq
@@ -229,31 +154,20 @@ def add_foreman
 end
 
 def add_gems
-  # gem 'activeadmin'
-  # gem 'active_model_serializers'
+  gem 'stimulus_reflex'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
   gem 'pundit'
   gem 'passwordless'
-  # gem 'devise'
   # gem 'doorkeeper'
-  # gem 'devise_invitable'
-  # gem 'devise_masquerade'
-  # gem 'omniauth-google-oauth2'
-  # gem 'omniauth-facebook'
-  # gem 'omniauth-twitter'
-  # gem 'omniauth-github'
   gem 'gravtastic'
-  # gem 'webpacker'
   gem 'sidekiq'
   gem 'foreman'
   gem 'redis'
   gem 'image_processing'
   gem "aws-sdk-s3", require: false
   gem 'whenever', require: false
-  # gem 'friendly_id'
-  # gem 'sitemap_generator'
   gem_group :development, :test do
     gem 'rspec-rails'
     gem 'capybara'
@@ -263,89 +177,17 @@ def add_gems
   end
 end
 
-def add_announcements
-  generate "model Announcement published_at:datetime announcement_type name description:text"
-end
-
-def add_notifications
-  generate "model Notification recipient_id:integer actor_id:integer read_at:datetime action:string notifiable_id:integer notifiable_type:string"
-end
-
-def add_active_admin
-  generate "active_admin:install User"
-
-  gsub_file "config/initializers/active_admin.rb",
-    /config.authentication_method = :authenticate_user!/,
-    "config.authentication_method = :authenticate_admin_user!"
-
-  gsub_file "config/initializers/active_admin.rb",
-    /# config.logout_link_method = :get/,
-    "config.logout_link_method = :delete"
-
-  insert_into_file "config/initializers/active_admin.rb", after: "  # config.authorization_adapter = ActiveAdmin::CanCanAdapter\n" do
-  <<-'RUBY'
-    config.authorization_adapter = ActiveAdmin::PunditAdapter
-    config.pundit_default_policy = "Admin::AdminPolicy"
-    config.on_unauthorized_access = :user_not_authorized
-  RUBY
-  end
-
-  gsub_file "db/seeds.rb",
-    /User.create!\(/,
-    "User.create!(admin: true, "
-end
-
 def add_doorkeeper
   generate "doorkeeper:install"
   generate "doorkeeper:migration"
-end
-
-def add_multiple_authentication
-    generate "model Service user:references provider uid access_token access_token_secret refresh_token expires_at:datetime auth:text"
-    generate "model UserPreference user:references:unique data:jsonb"
-
-    template = """
-  if Rails.application.credentials.google_app_id.present? && Rails.application.credentials.google_app_secret.present?
-    config.omniauth :google, Rails.application.credentials.google_app_id, Rails.application.credentials.google_app_secret
-  end
-
-  if Rails.application.credentials.facebook_app_id.present? && Rails.application.credentials.facebook_app_secret.present?
-    config.omniauth :facebook, Rails.application.credentials.facebook_app_id, Rails.application.credentials.facebook_app_secret, scope: 'email,user_posts'
-  end
-
-  if Rails.application.credentials.twitter_app_id.present? && Rails.application.credentials.twitter_app_secret.present?
-    config.omniauth :twitter, Rails.application.credentials.twitter_app_id, Rails.application.credentials.twitter_app_secret
-  end
-
-  if Rails.application.credentials.github_app_id.present? && Rails.application.credentials.github_app_secret.present?
-    config.omniauth :github, Rails.application.credentials.github_app_id, Rails.application.credentials.github_app_secret
-  end
-    """.strip
-
-    insert_into_file "config/initializers/devise.rb", "  " + template + "\n\n",
-          before: "  # ==> Warden configuration"
 end
 
 def add_whenever
   run "wheneverize ."
 end
 
-def add_friendly_id
-  generate "friendly_id"
-
-  insert_into_file(
-    Dir["db/migrate/**/*friendly_id_slugs.rb"].first,
-    "[6.0]",
-    after: "ActiveRecord::Migration"
-  )
-end
-
 def stop_spring
   run "spring stop"
-end
-
-def add_sitemap
-  rails_command "sitemap:install"
 end
 
 def setup_git_repository
@@ -367,24 +209,16 @@ after_bundle do
   setup_pg
   add_storage
   add_passwordless
-  # add_users
   # add_doorkeeper
   add_sidekiq
   add_foreman
   add_webpack
-  # add_vuejs
+  add_stimulus
   add_npm_packages
-  # add_jest
-  # add_announcements
-  # add_notifications
-  # add_multiple_authentication
-  # add_friendly_id
 
   copy_templates
 
   add_whenever
-
-  # add_sitemap
 
   setup_git_repository
 end
