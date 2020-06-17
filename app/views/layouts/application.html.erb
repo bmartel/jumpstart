@@ -7,20 +7,13 @@
 
     <%= csrf_meta_tags %>
     <%= yield :meta %>
-    <%= stylesheet_pack_tag 'application', media: 'all' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= yield :css %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= yield :js %>
   </head>
 
   <body class="font-sans">
-
-    <div id="app"></div>
-
-    <% if @state %>
-      <script>
-        window.__INITIAL_STATE__ = <%= raw @state.to_json %>;
-      </script>
-    <% end %>
-    <%= javascript_pack_tag 'application' %>
-    <%= yield :js %>
+    <%= yield %>
   </body>
 </html>

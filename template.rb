@@ -97,8 +97,8 @@ end
 
 def add_users
   # Install Devise
-  generate "devise:install"
-  generate "devise_invitable:install"
+  # generate "devise:install"
+  # generate "devise_invitable:install"
 
   # Install Pundit policies
   generate "pundit:install"
@@ -160,14 +160,14 @@ def copy_templates
   directory "db", force: true
   directory "config", force: true
   directory "lib", force: true
-  directory "spec", force: true
+  # directory "spec", force: true
   directory "docker", force: true
   copy_file "Dockerfile", force: true
   copy_file "docker-compose.yml", force: true
   copy_file "docker-compose.dev.yml", force: true
   copy_file "docker-compose.prod.yml", force: true
   copy_file ".dockerignore", force: true
-  copy_file "babel.config.js", force: true
+  # copy_file "babel.config.js", force: true
   copy_file "postcss.config.js", force: true
   copy_file ".eslintrc.js", force: true
   copy_file ".browserslistrc", force: true
@@ -181,7 +181,7 @@ def copy_templates
 end
 
 def add_webpack
-  rails_command 'webpacker:install'
+  # rails_command 'webpacker:install'
   gsub_file "config/environments/development.rb",
     /config.webpacker.check_yarn_integrity = true/,
     "config.webpacker.check_yarn_integrity = false"
@@ -225,30 +225,31 @@ def add_foreman
 end
 
 def add_gems
-  gem 'activeadmin'
-  gem 'active_model_serializers'
+  # gem 'activeadmin'
+  # gem 'active_model_serializers'
   gem 'enumerize'
   gem 'pagy'
   gem 'pg_search'
   gem 'pundit'
-  gem 'devise'
-  gem 'doorkeeper'
-  gem 'devise_invitable'
-  gem 'devise_masquerade'
-  gem 'omniauth-google-oauth2'
-  gem 'omniauth-facebook'
-  gem 'omniauth-twitter'
-  gem 'omniauth-github'
+  gem 'passwordless'
+  # gem 'devise'
+  # gem 'doorkeeper'
+  # gem 'devise_invitable'
+  # gem 'devise_masquerade'
+  # gem 'omniauth-google-oauth2'
+  # gem 'omniauth-facebook'
+  # gem 'omniauth-twitter'
+  # gem 'omniauth-github'
   gem 'gravtastic'
-  gem 'webpacker'
+  # gem 'webpacker'
   gem 'sidekiq'
   gem 'foreman'
   gem 'redis'
   gem 'image_processing'
   gem "aws-sdk-s3", require: false
   gem 'whenever', require: false
-  gem 'friendly_id'
-  gem 'sitemap_generator'
+  # gem 'friendly_id'
+  # gem 'sitemap_generator'
   gem_group :development, :test do
     gem 'rspec-rails'
     gem 'capybara'
@@ -361,24 +362,24 @@ after_bundle do
   setup_headless_chrome
   setup_pg
   add_storage
-  add_users
-  add_doorkeeper
+  # add_users
+  # add_doorkeeper
   add_sidekiq
   add_foreman
   add_webpack
-  add_vuejs
-  add_npm_packages
-  add_jest
-  add_announcements
-  add_notifications
-  add_multiple_authentication
-  add_friendly_id
+  # add_vuejs
+  # add_npm_packages
+  # add_jest
+  # add_announcements
+  # add_notifications
+  # add_multiple_authentication
+  # add_friendly_id
 
   copy_templates
 
   add_whenever
 
-  add_sitemap
+  # add_sitemap
 
   setup_git_repository
 end
