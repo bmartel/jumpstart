@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration[6.0]
+class CreateSessions < ActiveRecord::Migration[6.0]
   def change
     create_table :passwordless_sessions, id: :uuid do |t|
       t.belongs_to(
