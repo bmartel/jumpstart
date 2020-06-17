@@ -95,6 +95,10 @@ def add_storage
               env: 'production'
 end
 
+def add_passwordless
+  generate "passwordless:install:migrations"
+end
+
 def add_users
   # Install Devise
   # generate "devise:install"
@@ -362,6 +366,7 @@ after_bundle do
   setup_headless_chrome
   setup_pg
   add_storage
+  add_passwordless
   # add_users
   # add_doorkeeper
   add_sidekiq
