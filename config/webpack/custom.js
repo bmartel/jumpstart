@@ -11,7 +11,7 @@ const PATHS = {
 };
 
 const paths = [
-  ...glob.sync(`${PATHS.js}/**/*.{js,vue}`, { nodir: true }),
+  ...glob.sync(`${PATHS.js}/**/*.{js}`, { nodir: true }),
   ...glob.sync(`${PATHS.views}/**/*.erb`, { nodir: true }),
   ...glob.sync(`${PATHS.helpers}/**/*.rb`, { nodir: true }),
   ...glob.sync(`${PATHS.controllers}/**/*.rb`, { nodir: true }),
@@ -33,7 +33,6 @@ module.exports = {
   config: {
     resolve: {
       alias: {
-        vue: 'vue/dist/vue.js',
         '@': PATHS.js,
       },
     },
